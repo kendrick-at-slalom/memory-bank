@@ -2,7 +2,7 @@
 
 ## What a PolicyRule Is
 
-A `PolicyRule` record captures standing guidance: _normally, this is how we do things_. It answers the question "What rules should I follow?"
+A `PolicyRule` record captures standing guidance[^togaf-principles]: _normally, this is how we do things_. It answers the question "What rules should I follow?"
 
 Where a Decision is a specific choice at a point in time, a PolicyRule is a rule that applies to many future choices. "We chose Kafka for the order domain" is a Decision. "All event streaming must use Kafka unless a documented Exception applies" is a PolicyRule. The Decision is historical; the PolicyRule is forward-looking and imperative.
 
@@ -197,6 +197,8 @@ When established, how it evolved, what prompted creation.
 
 ## Notes
 
-[^togaf]: The enforcement tier system maps onto TOGAF's architecture compliance model, which separates mandatory standards from guidelines and reference architectures. See The Open Group. ["Architecture Governance."](https://pubs.opengroup.org/architecture/togaf9-doc/arch/chap44.html) TOGAF Standard, Version 9.2, Chapter 44. See also [Architecture Compliance, Chapter 48](https://pubs.opengroup.org/architecture/togaf91-doc/arch/chap48.html). The same graduated-severity pattern shows up in static analysis (error / warning / info) and in RFC 2119's requirement levels (MUST / SHOULD / MAY). See Bradner, S. (1997). ["Key words for use in RFCs to Indicate Requirement Levels."](https://datatracker.ietf.org/doc/html/rfc2119) RFC 2119.
+[^togaf]: The enforcement tier system maps onto TOGAF's architecture compliance model, which separates mandatory standards from guidelines and reference architectures. See The Open Group. ["Architecture Governance"](https://pubs.opengroup.org/architecture/togaf9-doc/arch/chap44.html) (TOGAF Standard, Version 9.2, Chapter 44; free Open Group account required). See also ["Architecture Compliance," Chapter 48](https://pubs.opengroup.org/architecture/togaf91-doc/arch/chap48.html). The same graduated-severity pattern shows up in static analysis (error / warning / info) and in RFC 2119's requirement levels (MUST / SHOULD / MAY). See Bradner, S. (1997). ["Key words for use in RFCs to Indicate Requirement Levels."](https://datatracker.ietf.org/doc/html/rfc2119) RFC 2119.
+
+[^togaf-principles]: PolicyRules follow the same shape as TOGAF Architecture Principles, which use a four-part template: **Name, Statement, Rationale, Implications**. The memory bank's `title`, `rule_statement`, `rationale`, and `scope_of_application` + body `Consequences` sections map onto that template directly. Teams already maintaining a TOGAF Principles Catalog can port principles into the memory bank without restructuring them. See The Open Group. ["Architecture Principles"](https://pubs.opengroup.org/architecture/togaf9-doc/arch/chap23.html) (TOGAF Standard, Version 9.2, Chapter 23; free Open Group account required).
 
 [^knowledge-decay]: The concept of the "half-life of knowledge" (the time until half of what's known in a domain becomes obsolete) was introduced by Fritz Machlup in _The Production and Distribution of Knowledge in the United States_ (Princeton University Press, 1962). It applies to organizational rules as much as to facts: a rule whose rationale has disappeared is being enforced out of inertia. See [Wikipedia: Half-life of Knowledge](https://en.wikipedia.org/wiki/Half-life_of_knowledge).

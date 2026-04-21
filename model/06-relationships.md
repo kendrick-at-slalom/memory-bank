@@ -14,7 +14,7 @@ The trick is keeping the vocabulary small enough to be usable and large enough t
 
 ## The Relationship Vocabulary
 
-Six types outline the full set of relationships:
+Six types outline the full set of relationships[^archimate]:
 
 | Relationship                   | What it means                                           | Example                                                               |
 | ------------------------------ | ------------------------------------------------------- | --------------------------------------------------------------------- |
@@ -224,3 +224,5 @@ Don't follow links from linked records; that way lies context explosion. One lev
 [^forward-chaining]: Storing relationships in one direction and deriving the reverse at query time follows the same principle as forward-chaining inference in graph databases, where assertions are stored and backward links are materialized on demand. The benefit is consistency: a single-direction link is always a single source of truth, while bidirectional explicit links can drift out of sync. See [Wikipedia: Graph Database](https://en.wikipedia.org/wiki/Graph_database).
 
 [^rfc-obsoletes]: The RFC document system uses explicit "Obsoletes" and "Updated by" header fields, where both the obsoleting and obsoleted documents carry cross-references. Once assigned a number and published, an RFC is never rescinded or modified; supersession creates a new document that references the old one. See [Wikipedia: Request for Comments](https://en.wikipedia.org/wiki/Request_for_Comments); [RFC Editor: Document Lifecycle Tutorial](https://www.rfc-editor.org/materials/lifecycle82.pdf).
+
+[^archimate]: The four memory types and typed-relationship vocabulary parallel the ArchiMate Motivation Extension, which formalizes _Driver_, _Goal_, _Requirement_, _Constraint_, and _Principle_ as first-class architecture elements linked by typed relationships (_realization_, _influence_, _aggregation_, _derivation_, _triggering_). The mappings are approximate but evocative: Decisions resemble Goals realized from Drivers; PolicyRules resemble Principles; Context records resemble Drivers and Assessments; Exceptions sit at the motivation layer as sanctioned deviations. Teams already modeling with ArchiMate can render memory bank records as motivation-layer artifacts. See The Open Group. ["Motivation Elements," ArchiMate 3.2 Specification](https://pubs.opengroup.org/architecture/archimate3-doc/ch-Motivation-Elements.html) (free Open Group account required); for a non-gated overview, see [Wikipedia: ArchiMate](https://en.wikipedia.org/wiki/ArchiMate).

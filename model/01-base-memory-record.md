@@ -2,7 +2,7 @@
 
 ## What This Is
 
-Every record in the memory bank shares a common set of fields, regardless of type. This is the base `MemoryRecord`. The four specializations (`Decision`, `Context`, `PolicyRule`, `Exception`) extend this base by adding type-specific fields.
+Every record in the memory bank[^togaf-repository] shares a common set of fields, regardless of type. This is the base `MemoryRecord`. The four specializations (`Decision`, `Context`, `PolicyRule`, `Exception`) extend this base by adding type-specific fields.
 
 Think of it like a class hierarchy: the base record gives you identity, lifecycle, provenance, and relationships. The specializations give you the details that make each type useful.
 
@@ -186,4 +186,6 @@ This means teams don't have to abandon existing ADR formats. They're writing a s
 
 [^uuid]: See Leach, P., et al. (2005). ["A Universally Unique IDentifier (UUID) URN Namespace."](https://datatracker.ietf.org/doc/html/rfc4122) RFC 4122. Updated by [RFC 9562](https://www.rfc-editor.org/rfc/rfc9562.html) (2024).
 
-[^rfc-lifecycle]: The RFC document lifecycle works the same way: documents move from Proposed Standard through Internet Standard, and newer RFCs can obsolete older ones without deleting them. See [Wikipedia: Request for Comments](https://en.wikipedia.org/wiki/Request_for_Comments); [RFC Editor: Document Lifecycle Tutorial](https://www.rfc-editor.org/materials/lifecycle82.pdf).
+[^rfc-lifecycle]: The RFC document lifecycle works the same way: documents move from Proposed Standard through Internet Standard, and newer RFCs can obsolete older ones without deleting them. The governing process is defined in Bradner, S. (1996). ["The Internet Standards Process -- Revision 3."](https://datatracker.ietf.org/doc/html/rfc2026) RFC 2026 / BCP 9, which specifies the maturity levels and the obsoletes/updates relationships between documents. See also [Wikipedia: Request for Comments](https://en.wikipedia.org/wiki/Request_for_Comments); [RFC Editor: Document Lifecycle Tutorial](https://www.rfc-editor.org/materials/lifecycle82.pdf).
+
+[^togaf-repository]: A memory bank is a lightweight form of TOGAF's Architecture Repository — a governed collection of architecture artifacts queried and maintained over time. The TOGAF repository includes an Architecture Metamodel, a Standards Information Base (analogous to PolicyRules), a Governance Log (analogous to Decisions and Exceptions), a Reference Library (analogous to Context), and an Architecture Landscape. The memory bank collapses these into four portable record types that retain the query-and-govern model without the enterprise weight. See The Open Group. ["Architecture Repository"](https://pubs.opengroup.org/architecture/togaf9-doc/arch/chap41.html) (TOGAF Standard, Version 9.2, Chapter 41; free Open Group account required). For a non-gated overview of TOGAF structure, see [Wikipedia: The Open Group Architecture Framework](https://en.wikipedia.org/wiki/The_Open_Group_Architecture_Framework).

@@ -227,7 +227,7 @@ Review exceptions in aggregate, not just individually. Patterns worth watching:
 
 ## Notes
 
-[^togaf-governance]: TOGAF's architecture governance framework requires that non-compliant changes receive formal dispensation from the Architecture Board. Exceptions are a core governance artifact, not an edge case. See The Open Group. ["Architecture Governance."](https://pubs.opengroup.org/architecture/togaf9-doc/arch/chap44.html) TOGAF Standard, Version 9.2, Chapter 44.
+[^togaf-governance]: TOGAF's architecture governance framework requires that non-compliant changes receive formal **dispensation** from the Architecture Board. TOGAF's Compliance Assessment grades each review on a four-point scale — _Compliant_, _Compliant with Observations_, _Non-compliant_, and _Non-compliant with Dispensation_ — and an Exception record is the memory bank's durable representation of that last grade. Exceptions are a core governance artifact in the TOGAF model, not an edge case. See The Open Group. ["Architecture Governance"](https://pubs.opengroup.org/architecture/togaf9-doc/arch/chap44.html) (TOGAF Standard, Version 9.2, Chapter 44) and ["Architecture Compliance"](https://pubs.opengroup.org/architecture/togaf91-doc/arch/chap48.html) (Chapter 48, which defines the assessment grades). Both require a free Open Group account.
 
 [^iso27001]: ISO/IEC 27001:2022 Annex A 5.1 requires that information security policies define exception handling procedures, including who can authorize deviations and how they are documented. See [ISMS.online: Annex A 5.1 — Information Security Policies](https://www.isms.online/iso-27001/annex-a-2022/5-1-information-security-policies-2022/).
 
