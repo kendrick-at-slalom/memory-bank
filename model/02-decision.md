@@ -2,19 +2,19 @@
 
 ## What a Decision Is
 
-A `Decision` record captures a choice: _we considered options, we picked one, here's why_. It answers the question "why is it built this way?"
+A `Decision` record captures a choice: _we considered options, we picked one, here's why_. It answers the question "Why is it built this way?"
 
-Decisions map onto something most technical teams already know — the Architecture Decision Record (ADR). A Decision record is functionally an ADR with richer frontmatter. Teams who have written ADRs will recognize the shape immediately.
+Decisions map onto something most technical teams already know: the Architecture Decision Record (ADR).[^nygard] A Decision record is functionally an ADR with richer frontmatter. Teams who have written ADRs will recognize the shape immediately.
 
-Decisions are the highest-value type for agent-assisted work. When a developer asks "can I use Redis for this?", the agent needs to find the Decision that said "we chose Postgres over Redis for persistence" and understand both the choice and the reasoning. Without the Decision record, the agent has to infer intent from code — which is exactly what the memory bank exists to prevent.
+Decisions are the highest-value type for agent-assisted work. When a developer asks "Can I use Redis for this?", the agent needs to find the Decision that said "We chose Postgres over Redis for persistence" and understand both the choice and the reasoning. Without the Decision record, the agent has to infer intent from code, which is exactly what the memory bank exists to prevent.
 
 ---
 
 ## How Decisions Differ from the Other Types
 
-- **Decision vs. PolicyRule.** A Decision is a specific choice at a point in time. A PolicyRule is standing guidance for many future choices. "We chose Kafka for the order domain" is a Decision. "All event streaming must use Kafka" is a PolicyRule. Decisions can become PolicyRules when patterns get codified.
-- **Decision vs. Context.** A Decision is an active choice; a Context is a passive fact. "We decided to migrate off MQTT" is a Decision. "The plant floor network only supports TCP" is Context that might shape a decision but isn't itself a choice.
-- **Decision vs. Exception.** An Exception is a sanctioned deviation from a PolicyRule. "This team is allowed to use Redis despite the Postgres standard" is an Exception, not a Decision.
+- **Decision vs. PolicyRule.** A Decision is a **specific choice** at a point in time. A PolicyRule is **standing guidance** for many future choices. "We chose Kafka for the order domain" is a Decision. "All event streaming must use Kafka" is a PolicyRule. Decisions can become PolicyRules when patterns get codified.
+- **Decision vs. Context.** A Decision is an **active choice**; a Context is a **passive fact**. "We decided to migrate off MQTT" is a Decision. "The plant floor network only supports TCP" is Context that might shape a decision but isn't itself a choice.
+- **Decision vs. Exception.** An Exception is a **sanctioned deviation** from a PolicyRule. "This team is allowed to use Redis despite the Postgres standard" is an Exception, not a Decision.
 
 **Rule of thumb:** if a reasonable person could have made a different choice and this record says which one was picked, it's a Decision.
 
@@ -40,36 +40,36 @@ tags: [event-sourcing, kafka, domain-driven-design]
 effective_from: 2026-04-10
 source_refs:
   - type: meeting
-    ref: "Commerce ARB 2026-04-08"
+    ref: 'Commerce ARB 2026-04-08'
   - type: ticket
-    ref: "COMMERCE-1247"
+    ref: 'COMMERCE-1247'
 
 # --- Decision-specific fields ---------------------------------------
 
 # Required for Decision
-decision_question: "Should the order domain use event sourcing or traditional CRUD persistence?"
-decision_outcome: "Event sourcing using Kafka as the event log."
+decision_question: 'Should the order domain use event sourcing or traditional CRUD persistence?'
+decision_outcome: 'Event sourcing using Kafka as the event log.'
 
 # Recommended for Decision
 # alternatives_considered: lets agents explain "why not X?" without re-litigating
 alternatives_considered:
-  - option: "Traditional CRUD with Postgres"
+  - option: 'Traditional CRUD with Postgres'
     reason_rejected: "Doesn't support the audit and replay requirements for order reconciliation."
-  - option: "CQRS without event sourcing"
-    reason_rejected: "Splits the complexity without capturing the audit trail we need."
+  - option: 'CQRS without event sourcing'
+    reason_rejected: 'Splits the complexity without capturing the audit trail we need.'
 
 # decision_drivers: the constraints that forced the choice
 decision_drivers:
-  - "Audit trail required by compliance policy POL-0003"
-  - "Replay capability needed for order reconciliation debugging"
-  - "Existing Kafka infrastructure in platform domain"
+  - 'Audit trail required by compliance policy POL-0003'
+  - 'Replay capability needed for order reconciliation debugging'
+  - 'Existing Kafka infrastructure in platform domain'
 
 # approved_by: the authority that signed off
 approved_by:
-  - "Architecture Review Board"
+  - 'Architecture Review Board'
 
 # Optional for Decision
-implementation_status: in-progress     # not-started | in-progress | complete | abandoned
+implementation_status: in-progress # not-started | in-progress | complete | abandoned
 ---
 ```
 
@@ -79,13 +79,13 @@ implementation_status: in-progress     # not-started | in-progress | complete | 
 
 ### Required
 
-**`decision_question`** — The question the decision answers, phrased as a question.
+**`decision_question`**: The question the decision answers, phrased as a question.
 
 - Good: _"Should the order domain use event sourcing or traditional CRUD persistence?"_
 - Bad: _"Event sourcing in the order domain"_ (title, not question)
 - Forces architects to name the real question, which is how agents match future queries to past decisions.
 
-**`decision_outcome`** — The chosen answer, one sentence.
+**`decision_outcome`**: The chosen answer, one sentence.
 
 - Good: _"Event sourcing using Kafka as the event log."_
 - Bad: _"We talked about it and decided to go with events, details in the body."_
@@ -93,27 +93,27 @@ implementation_status: in-progress     # not-started | in-progress | complete | 
 
 ### Recommended
 
-**`alternatives_considered`** — Options that were rejected, each with a reason.
+**`alternatives_considered`**: Options that were rejected, each with a reason.
 
-- _What's gained:_ The single most useful Decision field after `decision_outcome`. When someone suggests something that was already considered, the agent says "we looked at that; here's why we didn't" without re-litigating.
-- Format: `{option, reason_rejected}`. Keep reasons short — one sentence.
+- _What's gained:_ The single most useful Decision field after `decision_outcome`. When someone suggests something that was already considered, the agent says "we looked at that; here's why we didn't" without re-litigating.[^org-learning]
+- Format: `{option, reason_rejected}`. Keep reasons short, around one sentence.
 - Two or three alternatives is typical. One means the decision was foregone. More than five means you're conflating multiple decisions.
 
-**`decision_drivers`** — Constraints, requirements, or forces that shaped the choice.
+**`decision_drivers`**: Constraints, requirements, or forces that shaped the choice.
 
 - _What's gained:_ How an agent understands _why_ a decision holds. If drivers change, the decision might need revisiting.
 - Link to other records when possible: _"Audit trail required by POL-0003"_ is better than _"We need audit trails"_.
 
-**`approved_by`** — Who signed off.
+**`approved_by`**: Who signed off.
 
 - _What's gained:_ Accountability and trust calibration. Was it a lone engineer, a team, or a formal review body?
 - _"Architecture Review Board"_ is fine. _"The team"_ is not useful.
 
 ### Optional
 
-**`implementation_status`** — Where the decision is in execution: `not-started`, `in-progress`, `complete`, `abandoned`.
+**`implementation_status`**: Where the decision is in execution: `not-started`, `in-progress`, `complete`, `abandoned`.
 
-- Distinct from `status`. A decision can be `status: accepted, implementation_status: not-started` — agreed but not started. Or `status: accepted, implementation_status: abandoned` — agreed, started, stopped without formally superseding.
+- Distinct from `status`. A decision can be `status: accepted, implementation_status: not-started`: agreed but not started. Or `status: accepted, implementation_status: abandoned`: agreed, started, stopped without formally superseding.
 
 ---
 
@@ -166,3 +166,11 @@ This structure is a recommendation. Teams with an existing ADR style can use it 
 **Forgetting to link superseded records.** Both sides must be updated: the new record sets `supersedes`, the old updates to `status: superseded, superseded_by`.
 
 **Writing Decisions for things that are Context or PolicyRule.** If the record says "normally we do X," it's a PolicyRule. If it describes the environment, it's Context.
+
+---
+
+## Notes
+
+[^nygard]: The ADR format originates from Nygard, M. (2011). ["Documenting Architecture Decisions."](https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions) Cognitect Blog. Nygard proposed short text files capturing a single decision with status, context, and consequences. The memory bank extends this with structured frontmatter fields (`decision_question`, `alternatives_considered`, `decision_drivers`) that make decisions machine-queryable — Nygard's original was prose-only. See also [adr.github.io](https://adr.github.io/) for the broader ADR ecosystem.
+
+[^org-learning]: Teams frequently re-examine previously rejected alternatives when the original evaluation isn't accessible — the `alternatives_considered` field exists to short-circuit that. See Argote, L. (2013). _Organizational Learning: Creating, Retaining and Transferring Knowledge._ Springer. See also [Springer: Organizational Memory](https://link.springer.com/rwe/10.1057/978-1-137-00772-8_210).
