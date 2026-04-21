@@ -2,7 +2,7 @@
 
 ## Why Relationships Matter
 
-A memory bank of isolated records is a filing cabinet. A memory bank where records link to each other is a graph — and a graph is what lets an agent answer questions that span multiple records.
+A single record only knows what's inside it, but the questions people actually ask a memory bank almost never stay inside one record. So if those records don't link to each other, an agent is left to piece the connections together from whatever the prose happens to say.
 
 Consider: _"Why are we using Redis for the session cache when our persistence standard is Postgres?"_ Answering requires pulling together a PolicyRule (Postgres is standard), an Exception (session cache is exempted), a Context (why session cache has different requirements), and a Decision (why Redis specifically). Without explicit relationships, the agent infers connections from prose. With them, it follows links.
 
@@ -14,18 +14,18 @@ The trick is keeping the vocabulary small enough to be usable and large enough t
 
 ## The Relationship Vocabulary
 
-Six types:
+Six types outline the full set of relationships:
 
-| Relationship | What it means | Example |
-|---|---|---|
-| `supersedes` / `superseded_by` | Lifecycle replacement | A new ADR supersedes an old one |
-| `constrained_by` | Bound by another record (usually PolicyRule or Context) | A Decision is constrained by a PolicyRule mandating Postgres |
-| `derived_from` | Logical consequence or codification | A PolicyRule derived from an earlier Decision |
-| `depends_on` | Assumes another record is true | A Decision depends on a Context about Kafka availability |
-| `informs` | Shaped by but not bound | A Decision informed by user-research Context |
-| `relates_to` | Loose connection, fallback | Two adjacent Decisions that aren't in a specific logical relationship |
+| Relationship                   | What it means                                           | Example                                                               |
+| ------------------------------ | ------------------------------------------------------- | --------------------------------------------------------------------- |
+| `supersedes` / `superseded_by` | Lifecycle replacement                                   | A new ADR supersedes an old one                                       |
+| `constrained_by`               | Bound by another record (usually PolicyRule or Context) | A Decision is constrained by a PolicyRule mandating Postgres          |
+| `derived_from`                 | Logical consequence or codification                     | A PolicyRule derived from an earlier Decision                         |
+| `depends_on`                   | Assumes another record is true                          | A Decision depends on a Context about Kafka availability              |
+| `informs`                      | Shaped by but not bound                                 | A Decision informed by user-research Context                          |
+| `relates_to`                   | Loose connection, fallback                              | Two adjacent Decisions that aren't in a specific logical relationship |
 
-That's the full set. Any relationship between records should fit one of these six. If it doesn't, `relates_to` is the honest answer.
+Any relationship between records should fit one of these six. If it doesn't, `relates_to` is the honest answer.
 
 ---
 
@@ -58,15 +58,16 @@ Agents always link by UUID. The human-facing `id` is for conversation; the UUID 
 
 ## Bidirectionality
 
-Relationships have direction but are meaningful in both. If A is `constrained_by` B, then B constrains A.
+Relationships have direction but are meaningful in both. If `A` is `constrained_by` `B`, then `B` constrains `A`.
 
-**Store forward links explicitly; derive backward links at query time.**
+**Store forward links explicitly; derive backward links at query time.**[^forward-chaining]
 
-- A stores `{uuid: B, relationship: constrained_by}`.
-- B does not store a corresponding link.
-- Querying B for "what does this constrain?" searches for records pointing at B.
+- `A` stores `{uuid: B, relationship: constrained_by}`.
+- `B` does not store a corresponding link.
+- Querying `B` for "what does this constrain?" searches for records pointing at `B`.
 
 Advantages:
+
 1. No risk of divergence (single source of truth).
 2. Less writing (only update one record).
 3. Backward queries stay cheap (frontmatter is already being scanned).
@@ -81,20 +82,21 @@ Advantages:
 
 Replacing an older record with a newer one. The older record is preserved for history but stops being authoritative. An agent answering "what's current?" follows the chain forward.
 
-Supersession is always deliberate — a record doesn't become superseded just because a newer one exists that says something different.
+Supersession is always deliberate: a record doesn't become superseded just because a newer one exists that says something different.[^rfc-obsoletes]
 
 ### The Operation
 
-When record B supersedes record A:
+When record `B` supersedes record `A`:
 
 1. **Record A updates.** `status` → `superseded`. `superseded_by` → UUID of B. `effective_to` → date of supersession.
 2. **Record B is written.** `supersedes` → `[uuid_of_A]`. `effective_from` → same date.
-3. **Both records remain.** A is not deleted.
+3. **Both records remain.** `A` is not deleted.
 
 Any step missing creates a broken supersession:
-- B supersedes A but A isn't updated → A still looks current
-- A is updated but B doesn't link back → orphaned link
-- A is deleted → history lost, auditability gone
+
+- `B` supersedes `A` but `A` isn't updated → `A` still looks current
+- `A` is updated but `B` doesn't link back → orphaned link
+- `A` is deleted → history lost, auditability gone
 
 **Supersession is always a two-record operation.**
 
@@ -104,9 +106,9 @@ A new record supersedes an old one for a specific scope only. The old record sta
 
 ### Supersession Chains
 
-Records can form chains: A → B → C (current). Agents follow forward until they hit a non-superseded record. Each superseded record points at its immediate successor, not the final version.
+Records can form chains: `A` → `B` → `C` (current). Agents follow forward until they hit a non-superseded record. Each superseded record points at its immediate successor, not the final version.
 
-Long chains (>3-4) are a smell — either consolidate or check whether the underlying question needs reframing.
+Long chains (>3-4) are a smell: either consolidate or check whether the underlying question needs reframing.
 
 ---
 
@@ -182,6 +184,7 @@ Records from different roles can and should link. A product Context can inform a
 A record with zero relationships isn't necessarily wrong, but pause on it. Most records in a mature memory bank link to at least one other record.
 
 Orphan records tend to be:
+
 - **Early records** in a new memory bank (nothing to link to yet)
 - **Foundational records** at the root of the knowledge graph
 - **Low-value records** that probably shouldn't exist
@@ -194,7 +197,7 @@ When writing a record, try to name at least one relationship. If you can't, eith
 
 When an agent retrieves a record, it should also retrieve one level of linked records (outbound links in `related`, `supersedes`, `superseded_by`, `exception_to`). This produces coherent context.
 
-Don't follow links from linked records — that way lies context explosion. One level is enough for most queries. Follow chains further only when the query explicitly asks for history or lineage.
+Don't follow links from linked records; that way lies context explosion. One level is enough for most queries. Follow chains further only when the query explicitly asks for history or lineage.
 
 ---
 
@@ -213,3 +216,11 @@ Don't follow links from linked records — that way lies context explosion. One 
 **Inferring instead of declaring.** A Decision that implicitly depends on a Context isn't linked unless the author declares it.
 
 **Over-linking.** A record with twenty links is usually a record with three meaningful links and seventeen decorative ones. Link what matters for the record's meaning.
+
+---
+
+## Notes
+
+[^forward-chaining]: Storing relationships in one direction and deriving the reverse at query time follows the same principle as forward-chaining inference in graph databases, where assertions are stored and backward links are materialized on demand. The benefit is consistency: a single-direction link is always a single source of truth, while bidirectional explicit links can drift out of sync. See [Wikipedia: Graph Database](https://en.wikipedia.org/wiki/Graph_database).
+
+[^rfc-obsoletes]: The RFC document system uses explicit "Obsoletes" and "Updated by" header fields, where both the obsoleting and obsoleted documents carry cross-references. Once assigned a number and published, an RFC is never rescinded or modified; supersession creates a new document that references the old one. See [Wikipedia: Request for Comments](https://en.wikipedia.org/wiki/Request_for_Comments); [RFC Editor: Document Lifecycle Tutorial](https://www.rfc-editor.org/materials/lifecycle82.pdf).
