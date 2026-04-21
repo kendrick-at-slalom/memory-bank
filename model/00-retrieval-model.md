@@ -2,11 +2,16 @@
 
 ## Why This Document Exists
 
-Everything downstream of the memory bank schema — what fields to include, which ones to require, how to organize records physically — depends on a single question: **how will an agent actually find a record when someone asks a question?**
+Everything downstream of the memory bank schema (what fields to include, which ones to require, how to organize records physically) depends on a single question: **how will an agent actually find a record when someone asks a question?**[^rag]
 
 If you don't have a clear answer to that, the schema design is arbitrary. If you do, the fields stop looking decorative and start looking like the interface they are.
 
-This document describes the retrieval model in four layers: physical organization, frontmatter filtering, the four-stage funnel, and agent plumbing.
+This document describes the retrieval model in four layers:
+
+1. Physical organization
+2. Frontmatter filtering
+3. The four-stage retrieval funnel
+4. Agent plumbing
 
 ---
 
@@ -17,9 +22,15 @@ Retrieval happens in two passes:
 1. **Scope pass.** The agent narrows the universe of records to the ones that could possibly be relevant, using cheap structured filters. No body text is read yet.
 2. **Content pass.** The agent retrieves the full body of the handful of records that survived the scope pass, reads them, and synthesizes an answer.
 
-Semantic search (embeddings, vector similarity) is part of the content pass, not the scope pass. The scope pass is pure structured filtering — read the frontmatter header of each candidate file, match against the query's scoping criteria, discard anything that doesn't fit. Only then does the agent spend expensive tokens reading bodies.
+Semantic search (embeddings, vector similarity) is part of the content pass, not the scope pass. The scope pass is pure structured filtering[^pushdown]:
 
-This matters because the scope pass determines whether retrieval is _usable at scale_. A memory bank with a thousand records and no structured filtering means the agent is semantically searching a thousand bodies on every query — slow, expensive, and noisy. The same memory bank with good frontmatter filtering narrows to five to ten candidates in milliseconds and only reads those bodies. The difference is three orders of magnitude in cost and a much better answer.
+1. Read the frontmatter header of each candidate file
+2. Match against the query's scoping criteria
+3. Discard anything that doesn't fit
+
+Only then does the agent spend expensive tokens reading bodies.
+
+This matters because the scope pass determines whether retrieval is _usable at scale_. A memory bank with a thousand records and no structured filtering means the agent is semantically searching a thousand bodies on every query: slow, expensive, and noisy. The same memory bank with good frontmatter filtering narrows to five to ten candidates in milliseconds and only reads those bodies. The difference is three orders of magnitude in cost and a much better answer.
 
 ---
 
@@ -42,11 +53,13 @@ developer-memory-bank/
 Each role's records live in their own repository with their own governance. Cross-role queries hit multiple repos; within-role queries hit one.
 
 **Pros**
+
 - Hard scoping by default. PMs can't accidentally touch architecture records.
-- Governance is clean — each repo has its own review process, owners, and permissions.
+- Governance is clean: each repo has its own review process, owners, and permissions.
 - Retrieval is obviously scoped: product questions go to the product repo.
 
 **Cons**
+
 - Cross-role queries are slightly harder (multiple repos to search).
 - Records that span roles have no obvious home and might get duplicated.
 
@@ -63,11 +76,13 @@ platform-memory-bank/
 All roles write into the same domain repo. The `owners.role` field distinguishes authorship.
 
 **Pros**
+
 - Everything about a domain is in one place, regardless of role.
-- Cross-role awareness — PMs see architecture records and vice versa.
+- Cross-role awareness: PMs see architecture records and vice versa.
 - Maps naturally to domain-driven organization.
 
 **Cons**
+
 - Governance is complicated: one repo has multiple review processes.
 - Permissions are harder to manage.
 
@@ -86,10 +101,12 @@ memory-bank/
 Everyone writes into the same place. Folder structure encodes type.
 
 **Pros**
-- Maximally simple mental model — one place to look.
+
+- Maximally simple mental model. One place to look.
 - Cross-cutting search is trivial.
 
 **Cons**
+
 - Governance and permissions are hardest at scale.
 - Every change touches a shared repo.
 
@@ -97,7 +114,7 @@ Everyone writes into the same place. Folder structure encodes type.
 
 ### Choosing
 
-Start with Option C unless you have a specific reason not to. It's the lowest-friction way to get started. Move to Option A or B when governance demands it — it's easier to split later than to untangle prematurely.
+Start with Option C unless you have a specific reason not to. It's the lowest-friction way to get started. Move to Option A or B when governance demands it; it's easier to split later than to untangle prematurely.[^conway]
 
 ---
 
@@ -105,29 +122,31 @@ Start with Option C unless you have a specific reason not to. It's the lowest-fr
 
 Once the agent knows where to query, it narrows further using structured fields in the frontmatter. Four fields do most of the work:
 
-### `owners` — Who Produced the Record
+### `owners`: Who Produced the Record
 
-Filter: _"who authored this, by role?"_
+Filter: _"Who authored this, by role?"_
 
 Useful when a repo has mixed content from multiple roles. Less useful in per-role repos where every record shares the same author role.
 
-### `applies_to` — What the Record Is About
+### `applies_to`: What the Record Is About
 
-Filter: _"does this record apply to the thing I'm asking about?"_
+Filter: _"Does this record apply to the thing I'm asking about?"_
 
 `applies_to` is a structured map with keys for the dimensions that matter: `services`, `domains`, `products`, `systems`, etc. An agent working on `order-service` filters for records where `applies_to.services` includes `order-service`.
 
-**This is the single highest-value filter field.** A record without `applies_to` is effectively invisible to scoped retrieval — the agent has no way to know if it's relevant without reading the whole body.
+This is a faceted classification scheme: each key in the map is an independent dimension that can be queried in any combination without committing to a single hierarchy.[^ranganathan] The question "what are the right keys for `applies_to`?" is a facet design question: pick the dimensions your team actually queries on. Common starting facets are `services`, `domains`, and `systems`, but the right set depends on what your agents will be asked. A team that frequently asks "what applies to the mobile platform?" needs a `platforms` facet; one that never asks that question doesn't.
 
-### `memory_type` — What Kind of Record It Is
+**This is the single highest-value filter field.** A record without `applies_to` is effectively invisible to scoped retrieval; the agent has no way to know if it's relevant without reading the whole body.
 
-Filter: _"am I looking for decisions, policies, context, or exceptions?"_
+### `memory_type`: What Kind of Record It Is
+
+Filter: _"Am I looking for decisions, policies, context, or exceptions?"_
 
 A cheap, exact filter that cuts the candidate set dramatically. Most queries want one or two types, not all four.
 
-### `tags` — Loose Topical Labels
+### `tags`: Loose Topical Labels
 
-Filter: _"anything tagged with 'onboarding' or 'authentication'?"_
+Filter: _"Anything tagged with 'onboarding' or 'authentication'?"_
 
 The loosest filter. Works best as a fallback or complement to the structured fields above.
 
@@ -193,7 +212,7 @@ Reading every record in full to find matches. If you catch yourself doing this, 
 
 ## Layer 4: Telling the Agent How to Use All This
 
-The agent doesn't know any of this automatically. It has to be told which repos to consult and what the conventions are. Mechanisms in increasing order of sophistication:
+The agent doesn't know any of this automatically. It has to be told which repos to consult and what the conventions are. Suggested mechanisms, in increasing order of sophistication:
 
 ### Mechanism 1: Instructions Files
 
@@ -240,8 +259,20 @@ Four stages, and only stage 4 is expensive.
 
 ## The Key Insight
 
-**Structured fields are the interface to the agent, not decorative metadata.**
+> **Structured fields are the interface to the agent, not decorative metadata.**
 
-Every field someone skips — "I don't need to fill in `applies_to`, it's obvious from the body" — is a filter the agent can't use. A record without `applies_to` is invisible to scoped retrieval: the agent either retrieves it for every query (noisy) or for none (dead). The author thinks they saved thirty seconds of typing. What they actually did was make the record unfindable.
+Every field someone skips ("I don't need to fill in `applies_to`, it's obvious from the body!") is a filter the agent can't use. A record without `applies_to` is invisible to scoped retrieval: the agent either retrieves it for every query (noisy) or for none (dead). The author thinks they saved thirty seconds of typing. What they actually did was make the record unfindable.
 
 When you write a record, the frontmatter is for the agent and the body is for the human. The agent never reads your body unless the frontmatter tells it to. A well-written body with thin frontmatter is worse than a rough body with complete frontmatter, because the rough-body record will actually get found.
+
+---
+
+## Notes
+
+[^rag]: The two-pass retrieval model draws on Retrieval-Augmented Generation (RAG) architecture, where an external knowledge base is consulted before generation. See Lewis, P., et al. (2020). ["Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks."](https://arxiv.org/abs/2005.11401) _NeurIPS 2020_. The memory bank's scope pass is a deterministic, structured-metadata version of the retrieval step in RAG: cheaper and more reliable than embedding-based filtering when metadata is well-maintained.
+
+[^pushdown]: Cheap filtering before expensive operations is standard practice in database query optimization, known as _predicate pushdown_: push filter conditions as close to the data source as possible to minimize the rows that flow through expensive joins. See [Airbyte: Demystifying Predicate Pushdown](https://airbyte.com/data-engineering-resources/predicate-pushdown). The memory bank applies the same idea to document retrieval: frontmatter filtering is the pushdown; full body reading is the join.
+
+[^conway]: The choice of physical organization mirrors Conway's Law: "Organizations which design systems are constrained to produce designs which are copies of the communication structures of these organizations." Conway, M. (1968). ["How Do Committees Invent?"](https://www.melconway.com/Home/Committees_Paper.html) _Datamation_. See also [Fowler, M. "Conway's Law."](https://martinfowler.com/bliki/ConwaysLaw.html) The recommendation to start unified and split later is effectively the _inverse Conway maneuver_: letting knowledge structure drive team structure rather than the reverse.
+
+[^ranganathan]: `applies_to` is a faceted classification scheme. The idea of classifying items along multiple independent dimensions rather than a single hierarchy goes back to S.R. Ranganathan's Colon Classification (1933). Ranganathan's PMEST model (Personality, Matter, Energy, Space, Time) showed that the right facets depend on what queries users will run. See [Wikipedia: Faceted Classification](https://en.wikipedia.org/wiki/Faceted_classification); [Britannica: Colon Classification](https://www.britannica.com/science/Colon-Classification). For modern application to information architecture, see [UXmatters: Faceted Metadata for Information Architecture and Search](https://www.uxmatters.com/mt/archives/2006/06/faceted-metadata-for-information-architecture-and-search.php).
