@@ -2,7 +2,7 @@
 
 ## What a PolicyRule Is
 
-A `PolicyRule` record captures standing guidance: _normally, this is how we do things_. It answers the question "what rules should I follow?"
+A `PolicyRule` record captures standing guidance: _normally, this is how we do things_. It answers the question "What rules should I follow?"
 
 Where a Decision is a specific choice at a point in time, a PolicyRule is a rule that applies to many future choices. "We chose Kafka for the order domain" is a Decision. "All event streaming must use Kafka unless a documented Exception applies" is a PolicyRule. The Decision is historical; the PolicyRule is forward-looking and imperative.
 
@@ -12,11 +12,11 @@ PolicyRules are the type an agent should consult _proactively_. When a developer
 
 ## How PolicyRules Differ from the Other Types
 
-- **PolicyRule vs. Decision.** A Decision is retrospective ("we picked X"); a PolicyRule is prospective ("from now on, do X"). A Decision can _become_ a PolicyRule when the pattern gets codified. They're closely related but distinct in function.
-- **PolicyRule vs. Context.** A PolicyRule is prescriptive ("you must do X"); a Context is descriptive ("X is true"). The test: if someone violated the record, would it be wrong? If yes, PolicyRule. If it's just no longer a fact, Context.
+- **PolicyRule vs. Decision.** A Decision is retrospective ("We picked X"); a PolicyRule is prospective ("From now on, do X"). A Decision can _become_ a PolicyRule when the pattern gets codified. They're closely related but distinct in function.
+- **PolicyRule vs. Context.** A PolicyRule is prescriptive ("You must do X"); a Context is descriptive ("X is true"). The test: if someone violated the record, would it be wrong? If yes, PolicyRule. If it's just no longer a fact, Context.
 - **PolicyRule vs. Exception.** An Exception is a sanctioned break from a PolicyRule. They come in pairs: you can't have an Exception without the PolicyRule it excepts.
 
-**Rule of thumb:** if the record describes what someone should do in the future, it's a PolicyRule.
+**Rule of thumb:** if the record describes **what someone should do** in the future, it's a PolicyRule.
 
 ---
 
@@ -35,20 +35,20 @@ owners:
     name: platform-architecture-guild
 applies_to:
   domains: [commerce, fulfillment, platform]
-  services: []           # empty = applies to all services in listed domains
+  services: [] # empty = applies to all services in listed domains
 tags: [persistence, database, standard]
 effective_from: 2025-09-01
 source_refs:
   - type: meeting
-    ref: "Platform ARB 2025-08-27"
+    ref: 'Platform ARB 2025-08-27'
   - type: document
-    ref: "Platform Standards v3.2"
+    ref: 'Platform Standards v3.2'
 
 # --- PolicyRule-specific fields -------------------------------------
 
 # Required for PolicyRule
-rule_statement: "All services that require durable persistence must use PostgreSQL 15 or later as their primary datastore."
-enforcement: required              # required | recommended | advisory
+rule_statement: 'All services that require durable persistence must use PostgreSQL 15 or later as their primary datastore.'
+enforcement: required # required | recommended | advisory
 
 # Recommended for PolicyRule
 # rationale: explains why the rule exists, so agents can reason about applicability
@@ -72,10 +72,10 @@ exception_authority:
     name: platform-architecture-guild
 
 # review_cadence: how often the rule should be revisited
-review_cadence: annual             # none | quarterly | semi-annual | annual | biennial
+review_cadence: annual # none | quarterly | semi-annual | annual | biennial
 
 # Optional for PolicyRule
-policy_version: "2.1"
+policy_version: '2.1'
 supersedes_policy: null
 related_decisions:
   - 7f3c9a2e-1b4d-4e8a-9c5f-2d8b1a3e4f5c
@@ -88,47 +88,47 @@ related_decisions:
 
 ### Required
 
-**`rule_statement`** — The rule itself, in one clear sentence.
+**`rule_statement`**: The rule itself, in one clear sentence.
 
 - Good: _"All services that require durable persistence must use PostgreSQL 15 or later."_
 - Bad: _"We should probably think about standardizing on Postgres."_ (Not a rule.)
 - Use imperative language: "must," "should," "must not." Avoid weasel words like "generally" or "typically" unless you mean `enforcement: advisory`.
 
-**`enforcement`** — How strictly the rule is enforced:
+**`enforcement`**: How strictly the rule is enforced:
 
-- `required` — mandatory. Violations require an Exception record with approval. Agents treat this as a hard constraint when generating code.
-- `recommended` — the expected default. Deviations should be documented but don't formally require an Exception. Agents follow the rule unless the user explicitly overrides.
-- `advisory` — a suggestion. Teams can deviate freely. Agents mention the rule but don't block on it.
+- `required`: mandatory. Violations require an Exception record with approval. Agents treat this as a hard constraint when generating code.
+- `recommended`: the expected default. Deviations should be documented but don't formally require an Exception. Agents follow the rule unless the user explicitly overrides.
+- `advisory`: a suggestion. Teams can deviate freely. Agents mention the rule but don't block on it.
 
-The distinction matters for agent behavior. A `required` rule is a guardrail; the agent refuses to violate it without an Exception in scope. A `recommended` rule is a default. An `advisory` rule is context.
+The distinction matters for agent behavior. A `required` rule is a guardrail; the agent refuses to violate it without an Exception in scope. A `recommended` rule is a default. An `advisory` rule is context.[^togaf]
 
 ### Recommended
 
-**`rationale`** — Why the rule exists.
+**`rationale`**: Why the rule exists.
 
 - _What's gained:_ Rules without rationale rot. When the underlying reason disappears, the rule keeps being enforced out of habit. Rationale also lets agents reason about applicability to new situations.
 
-**`scope_of_application`** — Natural-language scope description.
+**`scope_of_application`**: Natural-language scope description.
 
 - _What's gained:_ Captures nuance that `applies_to` can't: "applies to new services but not existing ones," "applies in production but not dev."
 
-**`exceptions_allowed`** — Boolean. Whether Exception records can be filed.
+**`exceptions_allowed`**: Boolean. Whether Exception records can be filed.
 
 - _What's gained:_ Some rules admit exceptions (standardization rules); some don't (security rules like "no credentials in source code").
 
-**`exception_authority`** — Who can approve Exceptions against this rule.
+**`exception_authority`**: Who can approve Exceptions against this rule.
 
 - _What's gained:_ Removes ambiguity about who to ask. Same format as `owners`.
 
-**`review_cadence`** — How often the rule should be revisited: `none`, `quarterly`, `semi-annual`, `annual`, `biennial`.
+**`review_cadence`**: How often the rule should be revisited: `none`, `quarterly`, `semi-annual`, `annual`, `biennial`.
 
 ### Optional
 
-**`policy_version`** — Version number for minor revisions that don't warrant supersession.
+**`policy_version`**: Version number for minor revisions that don't warrant supersession.
 
-**`supersedes_policy`** — UUID of an older PolicyRule this one replaces.
+**`supersedes_policy`**: UUID of an older PolicyRule this one replaces.
 
-**`related_decisions`** — UUIDs of Decisions that established or refined this rule.
+**`related_decisions`**: UUIDs of Decisions that established or refined this rule.
 
 ---
 
@@ -141,7 +141,7 @@ The full text of the rule if it needs expansion beyond rule_statement.
 
 ## Rationale
 
-Why the rule exists. The most important section — it's what lets future
+Why the rule exists. The most important section—it's what lets future
 readers evaluate whether the rule still serves its purpose.
 
 ## Scope
@@ -183,12 +183,20 @@ When established, how it evolved, what prompted creation.
 
 **Missing rationale.** Rules without rationale become cargo-culted.
 
-**Ambiguous scope.** "Applies to services in the commerce domain" — does it apply to existing services? New ones? Both? Grandfathered services? Be specific.
+**Ambiguous scope.** "Applies to services in the commerce domain"—Does it apply to existing services? New ones? Both? Grandfathered services? Be specific.
 
 **Unclear exception authority.** `exceptions_allowed: true` with no `exception_authority` means the exception process is undefined.
 
 **Conflating multiple rules.** "Use Postgres, with audit logging, and never store PII in the database" is three rules. Split them.
 
-**Treating rules as permanent.** Rules without `review_cadence` or `review_by` rot silently over time.
+**Treating rules as permanent.** Rules without `review_cadence` or `review_by` rot silently over time.[^knowledge-decay]
 
 **Not marking rules superseded.** When a new rule replaces an old one, both records must be updated.
+
+---
+
+## Notes
+
+[^togaf]: The enforcement tier system maps onto TOGAF's architecture compliance model, which separates mandatory standards from guidelines and reference architectures. See The Open Group. ["Architecture Governance."](https://pubs.opengroup.org/architecture/togaf9-doc/arch/chap44.html) TOGAF Standard, Version 9.2, Chapter 44. See also [Architecture Compliance, Chapter 48](https://pubs.opengroup.org/architecture/togaf91-doc/arch/chap48.html). The same graduated-severity pattern shows up in static analysis (error / warning / info) and in RFC 2119's requirement levels (MUST / SHOULD / MAY). See Bradner, S. (1997). ["Key words for use in RFCs to Indicate Requirement Levels."](https://datatracker.ietf.org/doc/html/rfc2119) RFC 2119.
+
+[^knowledge-decay]: The concept of the "half-life of knowledge" (the time until half of what's known in a domain becomes obsolete) was introduced by Fritz Machlup in _The Production and Distribution of Knowledge in the United States_ (Princeton University Press, 1962). It applies to organizational rules as much as to facts: a rule whose rationale has disappeared is being enforced out of inertia. See [Wikipedia: Half-life of Knowledge](https://en.wikipedia.org/wiki/Half-life_of_knowledge).
