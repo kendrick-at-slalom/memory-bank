@@ -2,11 +2,11 @@
 
 ## What This Is
 
-Every record in the memory bank — regardless of type — shares a common set of fields. This is the base `MemoryRecord`. The four specializations (`Decision`, `Context`, `PolicyRule`, `Exception`) extend this base by adding type-specific fields.
+Every record in the memory bank shares a common set of fields, regardless of type. This is the base `MemoryRecord`. The four specializations (`Decision`, `Context`, `PolicyRule`, `Exception`) extend this base by adding type-specific fields.
 
 Think of it like a class hierarchy: the base record gives you identity, lifecycle, provenance, and relationships. The specializations give you the details that make each type useful.
 
-A record is a single Markdown file with a YAML frontmatter header and a prose body. The frontmatter is authoritative and machine-parseable. The body is human-readable supporting detail. Agents read the frontmatter first; humans read the body when they need the narrative.
+A record is a single Markdown file with a YAML frontmatter header and a prose body.[^frontmatter] The frontmatter is authoritative and machine-parseable. The body is human-readable supporting detail. Agents read the frontmatter first; humans read the body when they need the narrative.
 
 ---
 
@@ -14,11 +14,11 @@ A record is a single Markdown file with a YAML frontmatter header and a prose bo
 
 Fields come in three tiers:
 
-- **Required** — every record must have these. Validation fails without them.
-- **Recommended** — optional, but the record is significantly more useful to agents and humans when present. Each recommended field has a comment explaining what's gained by including it.
-- **Optional** — available when relevant, safely omitted otherwise.
+- **Required**: every record must have these. Validation fails without them.
+- **Recommended**: optional, but the record is significantly more useful to agents and humans when present. Each recommended field has a comment explaining what's gained by including it.
+- **Optional**: available when relevant, safely omitted otherwise.
 
-The tiering exists because adoption matters. A 5-field minimum with clearly marked "nice to have" fields is the difference between adoption and a dead schema.
+The tiering exists because adoption matters.[^rfc2119] A 5-field minimum with clearly marked "nice to have" fields is the difference between adoption and a dead schema.
 
 ---
 
@@ -27,22 +27,22 @@ The tiering exists because adoption matters. A 5-field minimum with clearly mark
 ```yaml
 ---
 # --- Required -------------------------------------------------------
-id: commerce-ADR-0042              # namespaced sequential, human-facing
-uuid: 7f3c9a2e-1b4d-4e8a-9c5f-2d8b1a3e4f5c   # globally unique, machine-facing
-memory_type: Decision              # Decision | Context | PolicyRule | Exception
+id: commerce-ADR-0042 # namespaced sequential, human-facing
+uuid: 7f3c9a2e-1b4d-4e8a-9c5f-2d8b1a3e4f5c # globally unique, machine-facing
+memory_type: Decision # Decision | Context | PolicyRule | Exception
 title: Adopt event sourcing for the order domain
-status: accepted                   # proposed | accepted | superseded | rejected | deprecated
+status: accepted # proposed | accepted | superseded | rejected | deprecated
 owners:
   - role: domain-architect
     name: commerce-architecture-guild
 
 # --- Recommended ----------------------------------------------------
 # confidence: improves agent trust and surfaces review state separately from decision state
-confidence: reviewed               # draft | reviewed | approved
+confidence: reviewed # draft | reviewed | approved
 
 # effective_from/effective_to: lets agents reason about "was this true on date X?"
 effective_from: 2026-04-10
-effective_to: null                 # null = still in effect
+effective_to: null # null = still in effect
 
 # applies_to: lets agents filter records by scope — the single highest-value field for retrieval precision
 applies_to:
@@ -56,17 +56,17 @@ tags: [event-sourcing, domain-driven-design, kafka]
 # source_refs: traceability back to the origin
 source_refs:
   - type: meeting
-    ref: "Commerce ARB 2026-04-08"
+    ref: 'Commerce ARB 2026-04-08'
   - type: ticket
-    ref: "COMMERCE-1247"
+    ref: 'COMMERCE-1247'
 
 # --- Optional -------------------------------------------------------
-supersedes: []                     # list of uuids this record replaces
-superseded_by: null                # uuid of the record that replaces this one
+supersedes: [] # list of uuids this record replaces
+superseded_by: null # uuid of the record that replaces this one
 related:
   - uuid: 8a2f1e4c-7b9d-4c3a-8e5f-1d2a3b4c5d6e
-    relationship: depends_on       # relates_to | supersedes | constrained_by | derived_from | depends_on | informs
-review_by: null                    # date for scheduled review
+    relationship: depends_on # relates_to | supersedes | constrained_by | derived_from | depends_on | informs
+review_by: null # date for scheduled review
 ---
 ```
 
@@ -76,36 +76,38 @@ review_by: null                    # date for scheduled review
 
 ### Required Fields
 
-**`id`** — Namespaced sequential identifier. Format: `<namespace>-<type-prefix>-<number>`, e.g., `commerce-ADR-0042`, `platform-POL-0007`, `platform-CTX-0015`.
+**`id`**: Namespaced sequential identifier. Format: `<namespace>-<type-prefix>-<number>`, e.g., `commerce-ADR-0042`, `platform-POL-0007`, `platform-CTX-0015`.
 
 - The namespace is chosen by the team or domain that owns the record.
 - Type prefix distinguishes record types in conversation: `ADR` for Decision, `POL` for PolicyRule, `EXC` for Exception, `CTX` for Context.
 - The number is sequential within the namespace.
 - **This field is for humans.** Agents should use `uuid` for linking.
 
-**`uuid`** — Globally unique identifier (RFC 4122 v4 or equivalent). Generated once at creation, never changed.
+**`uuid`**: Globally unique identifier (RFC 4122 v4 or equivalent).[^uuid] Generated once at creation, never changed.
 
 - The machine-facing handle. All cross-record links use `uuid` because `id` values can collide across namespaces and aren't stable across renames.
 - Auto-generated by tooling at creation time.
 
-**`memory_type`** — One of `Decision`, `Context`, `PolicyRule`, `Exception`.
+**`memory_type`**: One of `Decision`, `Context`, `PolicyRule`, `Exception`.
 
 - Determines which specialization schema applies.
 
-**`title`** — Short human-readable summary. Action-oriented and specific.
+**`title`**: Short human-readable summary. Action-oriented and specific.
 
 - Good: "Adopt event sourcing for the order domain"
 - Bad: "Event sourcing" or "Decision about events"
 
-**`status`** — Lifecycle state of the record. One of:
+**`status`**: Lifecycle state of the record. One of:
 
-- `proposed` — written, not yet agreed
-- `accepted` — agreed and in force
-- `superseded` — replaced by another record; requires `superseded_by`
-- `rejected` — considered and turned down, kept for institutional memory
-- `deprecated` — no longer applies but not replaced
+- `proposed`: written, not yet agreed
+- `accepted`: agreed and in force
+- `superseded`: replaced by another record; requires `superseded_by`
+- `rejected`: considered and turned down, kept for institutional memory
+- `deprecated`: no longer applies but not replaced
 
-**`owners`** — Who is responsible for this record. A list of `{role, name}` pairs.
+This lifecycle mirrors the RFC standards track,[^rfc-lifecycle] where documents progress through maturity levels and can be obsoleted by successors while remaining available for historical reference.
+
+**`owners`**: Who is responsible for this record. A list of `{role, name}` pairs.
 
 - Role is the structural position (domain-architect, platform-lead, etc.).
 - Name is the specific person, team, or guild.
@@ -113,37 +115,37 @@ review_by: null                    # date for scheduled review
 
 ### Recommended Fields
 
-**`confidence`** — How vetted the _record_ is. One of `draft`, `reviewed`, `approved`.
+**`confidence`**: How vetted the _record_ is. One of `draft`, `reviewed`, `approved`.
 
 - _What's gained:_ Distinguishes "we decided this but haven't double-checked the write-up" from "this has been through formal review." Valuable in regulated or safety-critical contexts.
 
-**`effective_from` / `effective_to`** — When the record's content became (or stops being) true.
+**`effective_from` / `effective_to`**: When the record's content became (or stops being) true.
 
 - _What's gained:_ Temporal reasoning. An agent can answer "what was our standard for X in Q2 2025?" by filtering on effective dates.
 - `effective_from` defaults to creation date if omitted. `effective_to` is null while in force.
 
-**`applies_to`** — Scope of the record. A structured map with keys for dimensions relevant to your environment.
+**`applies_to`**: Scope of the record. A structured map with keys for dimensions relevant to your environment.
 
 - _What's gained:_ The single highest-value field for retrieval precision. Without it, the agent has to read every record and guess relevance.
 - Suggested keys: `services`, `domains`, `systems`. Add more as needed (teams, products, regions). Keep keys consistent across the org.
 
-**`tags`** — Flat list of lightweight labels.
+**`tags`**: Flat list of lightweight labels. A tightly controlled vocabulary is suggested.
 
-- _What's gained:_ Faceted search and browsing. Complements `applies_to` — scope vs. topic.
+- _What's gained:_ Faceted search and browsing. Complements `applies_to` (scope vs. topic).
 
-**`source_refs`** — Pointers to origin. A list of `{type, ref}` pairs.
+**`source_refs`**: Pointers to origin. A list of `{type, ref}` pairs.
 
 - _What's gained:_ Traceability and trust. Common types: `meeting`, `ticket`, `pr`, `wiki`, `document`, `email`.
 
 ### Optional Fields
 
-**`supersedes`** — List of UUIDs this record replaces.
+**`supersedes`**: List of UUIDs this record replaces.
 
-**`superseded_by`** — UUID of the record that replaces this one. Must be non-null when `status: superseded`.
+**`superseded_by`**: UUID of the record that replaces this one. Must be non-null when `status: superseded`.
 
-**`related`** — Explicit relationships to other records. Each entry is `{uuid, relationship}` where relationship is one of: `relates_to`, `supersedes`, `constrained_by`, `derived_from`, `depends_on`, `informs`.
+**`related`**: Explicit relationships to other records. Each entry is `{uuid, relationship}` where relationship is one of: `relates_to`, `supersedes`, `constrained_by`, `derived_from`, `depends_on`, `informs`.
 
-**`review_by`** — Date for scheduled review.
+**`review_by`**: Date for scheduled review.
 
 ---
 
@@ -151,16 +153,16 @@ review_by: null                    # date for scheduled review
 
 Below the frontmatter, the record has a Markdown body. The body structure varies by `memory_type` (covered in type-specific documents), but every body should include at least:
 
-- **Context** — what prompted this record
-- **Content** — the actual decision, policy, context, or exception
-- **Rationale** — why this, not something else
-- **Consequences** — what follows from this record being true
+- **Context**: what prompted this record
+- **Content**: the actual decision, policy, context, or exception
+- **Rationale**: why this, not something else
+- **Consequences**: what follows from this record being true
 
 ---
 
 ## Rendering to Nygard ADR Format
 
-A Decision record can be rendered as a classic Nygard-style ADR by templating the frontmatter fields and body sections into the five-section format (Title, Status, Context, Decision, Consequences). The rendering is one-way — structured to prose is trivial, prose to structured is lossy.
+A Decision record can be rendered as a classic Nygard-style ADR by templating the frontmatter fields and body sections into the five-section format (Title, Status, Context, Decision, Consequences). The rendering is one-way; structured to prose is trivial, prose to structured is lossy.
 
 This means teams don't have to abandon existing ADR formats. They're writing a superset that also works for the three other memory types, and tooling can always produce a classic ADR view.
 
@@ -173,3 +175,15 @@ This means teams don't have to abandon existing ADR formats. They're writing a s
 **Small required set.** The required tier is intentionally minimal. If your team finds that records without `applies_to` are useless (they usually are), promote it to required for your context. The schema provides the structure; your team decides the enforcement.
 
 **Frontmatter is the agent interface.** A well-written body with thin frontmatter is worse than a rough body with complete frontmatter. The agent never reads your body unless the frontmatter tells it to.
+
+---
+
+## Notes
+
+[^frontmatter]: YAML front matter as a structured metadata header on Markdown files was popularized by the Jekyll static site generator. See [GitHub Docs: Using YAML Frontmatter](https://docs.github.com/en/contributing/writing-for-github-docs/using-yaml-frontmatter); [Hugo: Front Matter](https://gohugo.io/content-management/front-matter/). The memory bank repurposes this convention for agent retrieval rather than page rendering.
+
+[^rfc2119]: The three-tier enforcement model (required / recommended / optional) maps to RFC 2119's MUST / SHOULD / MAY requirement levels. See Bradner, S. (1997). ["Key words for use in RFCs to Indicate Requirement Levels."](https://datatracker.ietf.org/doc/html/rfc2119) RFC 2119.
+
+[^uuid]: See Leach, P., et al. (2005). ["A Universally Unique IDentifier (UUID) URN Namespace."](https://datatracker.ietf.org/doc/html/rfc4122) RFC 4122. Updated by [RFC 9562](https://www.rfc-editor.org/rfc/rfc9562.html) (2024).
+
+[^rfc-lifecycle]: The RFC document lifecycle works the same way: documents move from Proposed Standard through Internet Standard, and newer RFCs can obsolete older ones without deleting them. See [Wikipedia: Request for Comments](https://en.wikipedia.org/wiki/Request_for_Comments); [RFC Editor: Document Lifecycle Tutorial](https://www.rfc-editor.org/materials/lifecycle82.pdf).
