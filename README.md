@@ -1,6 +1,6 @@
 # Memory Bank
 
-A structured knowledge layer for AI-assisted development. Four record types, a shared base schema, a retrieval model, and a small relationship vocabulary — designed so that AI coding assistants can find and reason over organizational knowledge at generation time.
+A structured knowledge layer for AI-assisted development. Four record types, a shared base schema, a retrieval model, and a small relationship vocabulary, designed so that AI coding assistants can find and reason over organizational knowledge at generation time.
 
 ## What This Is
 
@@ -30,7 +30,7 @@ The model is deliberately lean. Required fields are the smallest set that makes 
 
 Run the scaffold prompt in [SCAFFOLD.md](SCAFFOLD.md) with an AI coding assistant (Claude Code, Copilot, Cursor, etc.) to interactively set up a memory bank for your project. The prompt asks a few questions about your context and then generates the directory structure, templates, and agent instructions.
 
-For the full architecture — types, retrieval model, relationships, and worked examples — see [model/README.md](model/README.md).
+For the full architecture (types, retrieval model, relationships, and worked examples) see [model/README.md](model/README.md).
 
 ## License
 
