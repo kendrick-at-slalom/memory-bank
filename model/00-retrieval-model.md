@@ -257,6 +257,47 @@ Four stages, and only stage 4 is expensive.
 
 ---
 
+## Three Query Origins, Same Funnel
+
+The retrieval model is role-neutral: the funnel doesn't care who asked. What changes by role is which filter fields matter most and which record types get retrieved. Three short vignettes to ground the abstraction:
+
+### Architect, reviewing an intake request
+
+An architect reads a new intake description and wants to know what constraints already apply to the scope before designing. The agent runs:
+
+- Stage 1: `Glob memory-bank/decisions/*commerce*` and `memory-bank/rules/*commerce*`
+- Stage 2: `Grep "applies_to:.*order-service" memory-bank/` and `Grep "memory_type: Exception" memory-bank/rules/`
+- Stage 3: Frontmatter on the survivors
+- Stage 4: Full bodies on two Decisions and one PolicyRule
+
+The filters that do the work: `memory_type`, `applies_to.services`, `applies_to.domains`. The architect is scanning for constraints to respect, not for commitments or gotchas.
+
+### Developer, before starting an implementation task
+
+A developer has a story to build and wants to know what rules and decisions apply before writing code. The agent runs the same funnel:
+
+- Stage 1: Glob the service's slug in decisions and rules
+- Stage 2: Grep for `memory_type: PolicyRule` + `applies_to.services` containing the service
+- Stage 3: Frontmatter read to see enforcement levels and statuses
+- Stage 4: Full body on required PolicyRules and any Context records flagging gotchas
+
+The filters that do the work: `memory_type: PolicyRule` (to see what's imperative), `enforcement: required` (to see what's non-negotiable), `applies_to.services`. The developer's primary question is "what must I follow, and what should I know."
+
+### PM, deciding whether to accept an intake request
+
+A PM is about to commit an intake request to the backlog and wants to know whether relevant decision context already exists. The agent runs:
+
+- Stage 1: Glob the product area's slug across all four types
+- Stage 2: Grep for `applies_to.segments` or `applies_to.products` matching the request
+- Stage 3: Frontmatter on survivors, looking for existing commitments (Context tagged `commitment`), prior prioritization Decisions, and product principles
+- Stage 4: Full body on the most relevant two or three records
+
+The filters that do the work: `memory_type: Context` + `tags: commitment` (to surface promises), `memory_type: Decision` + `applies_to.products` (to surface prior prioritization calls), `memory_type: PolicyRule` (to surface product principles). The PM's primary question is "what decision context exists already, and am I about to re-litigate it."
+
+Same funnel, three entry points. The schema's structured fields are what make the same pattern serve three different role-shaped questions.
+
+---
+
 ## The Key Insight
 
 > **Structured fields are the interface to the agent, not decorative metadata.**

@@ -20,6 +20,28 @@ PolicyRules are the type an agent should consult _proactively_. When a developer
 
 ---
 
+## What a PolicyRule Looks Like for You
+
+The architect's persistence standard, the PM's product principle, and the developer's team practice all fit the same schema. Same fields, different scope.
+
+| Field | Architect | PM / Product Owner | Developer |
+| --- | --- | --- | --- |
+| `rule_statement` | "All services that require durable persistence must use PostgreSQL 15 or later." | "Self-serve features must work end-to-end without a sales touch for tiers 1 and 2." | "All outbound HTTP calls in fulfillment-service go through the retry-backoff wrapper." |
+| `enforcement` | `required` for standards, `recommended` for defaults | `required` for commercial-model principles, `recommended` for patterns | `required` for team practices that block incidents, `recommended` for style |
+| `rationale` | Operational surface, shared tooling, governance | Commercial model, unit economics, customer promise | Incident history, centralized behavior, agent guidance at generation time |
+| `applies_to` | Domains, services, systems | Segments, products, tiers, markets | Services, modules, repos |
+| `exceptions_allowed` | Usually true for standards; false for safety/security hard lines | Usually true (case-by-case carve-outs happen) | True when workarounds are realistic; false for security-shaped rules |
+
+The authorship trigger: you write a PolicyRule when you've named a pattern that should govern many future choices without being re-debated each time. Architects name standing architectural standards; PMs name product principles that bound scope calls; developers name team practices that keep the codebase (and generated code) consistent.
+
+For full worked examples and authorship triggers by persona:
+
+- [`by-persona/architect-authorship.md`](by-persona/architect-authorship.md)
+- [`by-persona/pm-authorship.md`](by-persona/pm-authorship.md)
+- [`by-persona/developer-authorship.md`](by-persona/developer-authorship.md)
+
+---
+
 ## PolicyRule-specific Frontmatter
 
 ```yaml

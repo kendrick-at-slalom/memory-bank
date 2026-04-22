@@ -34,6 +34,28 @@ Teams that skip exception tracking accumulate shadow rules that silently erode t
 
 ---
 
+## What an Exception Looks Like for You
+
+Exceptions feel architect-coded at first glance (air-gapped networks, mTLS carve-outs), but every persona that authors PolicyRules also authors the Exceptions against them. Same schema, same care required.
+
+| Field | Architect | PM / Product Owner | Developer |
+| --- | --- | --- | --- |
+| `exception_to` | UUID of the architectural PolicyRule | UUID of the product principle | UUID of the team practice or enterprise standard |
+| `justification` | Technical constraint that blocks compliance + what replaces the protection | Prior commitment or strategic circumstance + what substitutes for the principle's protection | Framework limitation, legacy constraint, runtime environment + what mitigates the gap |
+| `compensating_controls` | Network segmentation, physical access review, equivalent technical controls | Manual CSM onboarding, 30-day check-in, precedent-logging Context | Per-request timeouts, alerting on error rates, linked retirement Decision |
+| `review_by` | Annual for structural; shorter for transitional | Tied to contract window or commitment date | Tied to the retirement date of the workaround |
+| `scope_boundary` | "Applies only to plant-03, not other plants" | "Applies only to customer-X, not other tier-2 customers" | "Applies only to legacy-billing-adapter, not other legacy modules" |
+
+The authorship trigger: you write an Exception when you (or an approver in your scope) sanction a deviation from a standing rule for a specific case. The rule still stands; this record is how you prove the deviation is governed, bounded, and time-limited.
+
+For full worked examples and authorship triggers by persona:
+
+- [`by-persona/architect-authorship.md`](by-persona/architect-authorship.md)
+- [`by-persona/pm-authorship.md`](by-persona/pm-authorship.md)
+- [`by-persona/developer-authorship.md`](by-persona/developer-authorship.md)
+
+---
+
 ## Exception-Specific Frontmatter
 
 ```yaml

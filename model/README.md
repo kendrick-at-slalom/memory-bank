@@ -14,6 +14,20 @@ The numbered files build on each other:
 6. [05-context.md](05-context.md) — The `Context` type.
 7. [06-relationships.md](06-relationships.md) — How records link to each other.
 
+For authorship in your own voice — when you write records, what they look like filled in by your role — see the per-persona guides in [`by-persona/`](by-persona/). Start there if you want to see yourself in the model before reading the schema files.
+
+## Authorship Map
+
+The four types apply to every role. What changes is the moment that produces the record and the language that fills the fields.
+
+| Persona | Decision | Context | PolicyRule | Exception |
+| --- | --- | --- | --- | --- |
+| **Architect** | Architectural choice made under constraints (event sourcing, persistence, topology) | System fact learned or confirmed (air-gapped network, canonical source of truth) | Standing architectural pattern (Postgres standard, mTLS baseline) | Granting or documenting a sanctioned technical deviation |
+| **PM / Product Owner** | Prioritization call, scope boundary, launch sequencing | Customer/market fact, segment truth, commitment (tag as `commitment`) | Product principle (self-serve promise, tier gating) | Customer- or release-specific carve-out against a product principle |
+| **Developer** | Library/tool choice, implementation pattern with reach | Gotcha, performance characteristic, vendor behavior | Team practice codified as a standard (all HTTP calls through a wrapper) | Workaround accepted against a team or enterprise standard |
+
+The deeper version — triggers, field-fill cheat sheets, and full worked records for each cell — lives in the [per-persona guides](by-persona/).
+
 ## The Retrieval Model
 
 Retrieval happens in two passes:
@@ -34,7 +48,7 @@ When an agent queries the memory bank, it should follow this funnel — cheapest
 | 3     | Frontmatter-only read | ~300 tokens per record | Pull just the YAML header of surviving candidates |
 | 4     | Full body read        | Full token cost        | Only for the 3–5 records that actually matter     |
 
-Anti-pattern: reading every record in full to find matches. If you're doing this, go back to stage 1.
+Anti-pattern: reading every record in full to find matches. If you’re doing this, go back to stage 1.
 
 Full spec: [00-retrieval-model.md](00-retrieval-model.md)
 
@@ -58,7 +72,7 @@ Full spec: [01-base-memory-record.md](01-base-memory-record.md)
 
 A `Decision` captures a choice made at a point in time. It answers _why is it built this way?_ Decisions map directly onto ADRs, which makes them a natural entry point for teams already familiar with architecture decision records. A Decision adds `decision_question`, `decision_outcome`, `alternatives_considered`, `decision_drivers`, and `approved_by` on top of the base schema.
 
-**Rule of thumb:** if a reasonable person could have picked a different option and this record says which one was picked, it's a Decision.
+**Rule of thumb:** if a reasonable person could have picked a different option and this record says which one was picked, it’s a Decision.
 
 Full spec: [02-decision.md](02-decision.md)
 
@@ -70,7 +84,7 @@ Full spec: [03-policy-rule.md](03-policy-rule.md)
 
 ### Exception
 
-An `Exception` captures a **sanctioned deviation from a PolicyRule**. Every Exception points at exactly one PolicyRule through its required `exception_to` field. If there's no rule to point at, you have a Decision or a Context, not an Exception. The other required fields are `justification` and `approved_by`.
+An `Exception` captures a **sanctioned deviation from a PolicyRule**. Every Exception points at exactly one PolicyRule through its required `exception_to` field. If there’s no rule to point at, you have a Decision or a Context, not an Exception. The other required fields are `justification` and `approved_by`.
 
 Track exceptions as first-class records. Exceptions that live in Slack threads or verbal agreements are invisible to agents and impossible to audit. An Exception record turns informal permission into something governed and time-bounded. Teams that skip this accumulate shadow rules — informal deviations that nobody can find, review, or expire.
 
@@ -78,7 +92,7 @@ Full spec: [04-exception.md](04-exception.md)
 
 ### Context
 
-A `Context` captures an environmental fact: _this is true right now_. It is descriptive rather than prescriptive. Context adds `context_scope` and `fact_statement` as required fields. Context is the loosest type and the one every role on a team produces — it's where the shared-backbone claim becomes concrete.
+A `Context` captures an environmental fact: _this is true right now_. It is descriptive rather than prescriptive. Context adds `context_scope` and `fact_statement` as required fields. Context is the loosest type and the one every role on a team produces — it’s where the shared-backbone claim becomes concrete.
 
 Full spec: [05-context.md](05-context.md)
 
@@ -98,7 +112,7 @@ Records link to each other through six relationship types:
 1. `supersedes` (lifecycle replacement)
 2. `constrained_by` (bounded by another record)
 3. `derived_from` (logical consequence)
-4. `depends_on` (rests on another record's truth)
+4. `depends_on` (rests on another record’s truth)
 5. `informs` (shaped but not forced)
 6. `relates_to` (loose fallback)
 
@@ -142,7 +156,7 @@ Supersession is a two-record operation. Both sides must be updated.
 
 ### Example 3: Cross-role Context Informing a Decision
 
-A product manager records a Context about 99.95% uptime SLAs. An architect later chooses an active-active deployment topology. The Decision is shaped by the PM's Context, which rests on a foundational Context about regional footprint.
+A product manager records a Context about 99.95% uptime SLAs. An architect later chooses an active-active deployment topology. The Decision is shaped by the PM’s Context, which rests on a foundational Context about regional footprint.
 
 ```mermaid
 flowchart TD
@@ -154,6 +168,50 @@ flowchart TD
     DEC -->|informs| CTX_SLA
     DEC -->|informs| CTX_BASE
 ```
+
+### Example 4: A PM Commitment Shaping a Developer Decision
+
+A product manager authors a Context capturing a customer commitment (tagged `commitment`): enterprise accounts hold a 99.95% uptime SLA with service credits on breach. A developer on the fulfillment team later makes an implementation Decision about retry behavior for calls into a flaky upstream. The Decision inherits from the commitment Context — the retry budget is tighter than it would be in isolation because the SLA is load-bearing.
+
+```mermaid
+flowchart TD
+    CTX_COMMIT["Context: Enterprise accounts hold 99.95% SLAs with credits on breach (PM)"]
+    DEC_RETRY["Decision: Set fulfillment retry budget to 3 attempts with 100ms base backoff (Developer)"]
+
+    DEC_RETRY -->|constrained_by| CTX_COMMIT
+```
+
+The Decision record cites the PM’s Context explicitly in `decision_drivers`. A reader of the retry Decision six months later can follow the link to understand why the retry budget isn’t more generous. The commitment becomes load-bearing across personas.
+
+### Example 5: A Developer Decision Bounded by an Architect PolicyRule
+
+A developer chooses a library for outbound HTTP calls in their service. Multiple libraries are plausible, but an architect-authored PolicyRule mandates using the platform-approved retry-backoff wrapper. The Decision narrows its alternatives to libraries compatible with the wrapper, and the record cites the PolicyRule as a driver.
+
+```mermaid
+flowchart TD
+    POL_WRAP["PolicyRule: All outbound HTTP must use retry-backoff wrapper (Architect)"]
+    DEC_LIB["Decision: Adopt reqwest as the HTTP client in fulfillment-service (Developer)"]
+
+    DEC_LIB -->|constrained_by| POL_WRAP
+```
+
+The wrapper PolicyRule limits the developer’s choice, which is the point: future developers joining the fulfillment team get both the wrapper rule and the library Decision when they query the memory bank for HTTP-client guidance. The records compound instead of competing.
+
+### Example 6: A PM Decision Inheriting From a Segment-level Context
+
+A product manager decides to delay tier-2 rollout of a feature from Q2 to Q3. The Decision rests on a Context about tier-2 customers (they identified SSO integration as a blocker in discovery) and on a commitment Context to tier-1 design partners. Both Contexts show up in `decision_drivers`.
+
+```mermaid
+flowchart TD
+    CTX_T2_BLOCKER["Context: Tier-2 customers identified SSO as a rollout blocker (PM)"]
+    CTX_T1_COMMIT["Context: Tier-1 design partners expect Q2 access (PM, commitment)"]
+    DEC_DELAY["Decision: Delay tier-2 expense reporting rollout to Q3 (PM)"]
+
+    DEC_DELAY -->|constrained_by| CTX_T2_BLOCKER
+    DEC_DELAY -->|constrained_by| CTX_T1_COMMIT
+```
+
+Same model as the architecture examples, same relationships, different content. The PM who wrote the delay Decision didn’t invent a new record type; the standard Decision shape held up. When the Q3 launch approaches and someone asks “why did we hold tier-2?”, the Decision cites both Contexts and the answer is one query away.
 
 ## Physical Organization Options
 
