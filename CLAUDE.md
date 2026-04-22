@@ -12,16 +12,24 @@
 ├── README.md          # human-facing overview (start here for orientation)
 ├── SCAFFOLD.md        # executable prompt — walks an agent through setting up a memory bank
 └── model/             # the full specification
+    ├── README.md               # condensed overview of the model, points into the spec files
     ├── 00-retrieval-model.md   # WHY the schema is shaped this way
     ├── 01-base-memory-record.md # shared schema all types extend
     ├── 02-decision.md          # Decision type
     ├── 03-policy-rule.md       # PolicyRule type
     ├── 04-exception.md         # Exception type
     ├── 05-context.md           # Context type
-    └── 06-relationships.md     # how records link to each other
+    ├── 06-relationships.md     # how records link to each other
+    └── by-persona/             # authorship guides per role — same schema, role-specific voice
+        ├── README.md
+        ├── architect-authorship.md
+        ├── pm-authorship.md
+        └── developer-authorship.md
 ```
 
 **Reading order matters.** `00-retrieval-model.md` first — it explains the design forces that shaped everything else. Then `01-base-memory-record.md` for the shared schema. Type-specific files and relationships after that.
+
+There is a second, parallel entry path through `model/by-persona/`. The persona guides don't add to the schema — they show each role what authorship looks like in their own voice, with worked records and authorship triggers. If the user identifies a specific role for themselves or their team, point them there as an on-ramp; they can read the spec files after. The persona guides and the schema files must stay consistent — changes to one may require changes to the other.
 
 ## How This Repo Gets Used
 

@@ -13,8 +13,11 @@ You are going to help me set up a memory bank for my project — a structured kn
 
 The memory bank model is documented in this repo. Before we begin, read the following files to understand the model:
 - README.md (overview)
-- 00-retrieval-model.md (how agents find records — especially the four-stage funnel)
-- 01-base-memory-record.md (shared schema)
+- model/README.md (condensed model overview with the authorship map)
+- model/00-retrieval-model.md (how agents find records — especially the four-stage funnel)
+- model/01-base-memory-record.md (shared schema)
+
+Also note that `model/by-persona/` contains authorship guides for architects, PMs, and developers — same schema, role-specific voice and worked examples. You don't need to read them yet; you'll point me at the right one once you know who will be writing records (Question 2).
 
 Then ask me the following questions ONE AT A TIME, waiting for my answer before proceeding to the next. Use my answers to configure the scaffold.
 
@@ -36,6 +39,13 @@ Based on the answer:
 - Multiple roles with shared domain ownership → recommend Option B (per-domain)
 
 Explain your recommendation briefly and ask if they agree or want a different structure.
+
+Then, for any named role that matches one of the persona authorship guides, point them at the corresponding file as onboarding for whoever will write records in that role:
+- Architects → `model/by-persona/architect-authorship.md`
+- Product managers / product owners → `model/by-persona/pm-authorship.md`
+- Developers → `model/by-persona/developer-authorship.md`
+
+If the team has a role that doesn't match an existing persona guide, that's fine — the base schema applies to every role. They'll work from the spec files directly.
 
 ---
 
@@ -332,7 +342,7 @@ Ask: "Would you like me to help you write your first few records? Good starting 
 
 Want to seed one or two records now, or start with empty templates?"
 
-If yes, walk them through writing 1-2 records using the templates, filling in real content from their answers.
+If yes, walk them through writing 1-2 records using the templates, filling in real content from their answers. If the user's role matches a persona authorship guide in `model/by-persona/`, read that guide first and use its field-fill cheat sheet and worked examples to shape how you phrase each field — the templates give the structure, the persona guide gives the voice.
 
 ---
 
