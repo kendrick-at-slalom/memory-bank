@@ -2,39 +2,43 @@
 
 This guide walks through when you author memory bank records as an architect and what each type looks like in your voice.
 
-For the schema itself, see the parent files (`01`–`06`). This guide assumes you've skimmed the [model README](../README.md) at least once.
+For the schema itself, see the parent files (`01`–`06`). This guide assumes you’ve skimmed the [model README](../README.md) at least once.
 
-## When you author a record
+## When You Author a Record
 
 Architect work produces records at these moments:
 
 | Moment                                                                                                                                          | Record type    |
 | ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| You made an architectural decision under constraints — e.g. picked a technology, shaped a boundary, sequenced a migration                       | **Decision**   |
-| You learned or confirmed a system fact — e.g. the plant-03 OT network is air-gapped, the order-service is the canonical source of truth         | **Context**    |
-| Your team adopted a standing pattern as the way things are done in your scope — e.g. "all persistent services use Postgres"                     | **PolicyRule** |
-| You granted or documented a sanctioned deviation from a rule — e.g. a service is exempt from the mTLS policy because of a specific circumstance | **Exception**  |
+| You made an architectural decision under constraints (e.g. picked a technology, shaped a boundary, sequenced a migration)                       | **Decision**   |
+| You learned or confirmed a system fact (e.g. the `plant-03` OT network is air-gapped, the order-service is the canonical source of truth)       | **Context**    |
+| Your team adopted a standing pattern as the way things are done in your scope (e.g. “all persistent services use Postgres”)                     | **PolicyRule** |
+| You granted or documented a sanctioned deviation from a rule (e.g. a service is exempt from the mTLS policy because of a specific circumstance) | **Exception**  |
 
-The common thread: if you're explaining the _why_ of a system shape to someone who wasn't in the room, you're most often writing a Decision or a Context. If you're describing the rules that govern code being generated inside your scope, you're writing PolicyRules. If you're recording a carve-out from one of those rules, you're writing an Exception.
+The common thread:
 
-## Field-fill cheat sheet
+- If you’re **explaining the _why_ of a system shape** to someone who wasn’t in the room, you’re most often writing a **`Decision`** or a **`Context`**
+- If you’re **describing the rules** that govern code being generated inside your scope, you’re writing **`PolicyRules`**
+- If you’re recording a **carve-out** from one of those rules, you’re writing an **`Exception`**
+
+## Field-fill Cheat Sheet
 
 The schema defines each field; this table shows how you as an architect naturally phrase them.
 
 | Field                     | What you put here                                                                                                                                              |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `decision_question`       | The design question you were answering, framed as a question. "Should the order domain use event sourcing or traditional CRUD persistence?"                    |
-| `decision_outcome`        | The choice, one sentence. "Event sourcing using Kafka as the event log."                                                                                       |
+| `decision_question`       | The design question you were answering, framed as a question. “Should the order domain use event sourcing or traditional CRUD persistence?”                    |
+| `decision_outcome`        | The choice, one sentence. “Event sourcing using Kafka as the event log.”                                                                                       |
 | `alternatives_considered` | Technical alternatives with one-sentence rejection reasons. Two or three typical.                                                                              |
 | `decision_drivers`        | The constraints that forced the choice. Audit requirements, platform capabilities, prior Decisions, PolicyRules you inherit.                                   |
-| `rule_statement`          | An imperative sentence describing the standard. "All services that require durable persistence must use PostgreSQL 15 or later."                               |
-| `fact_statement`          | One paragraph stating what is true. "The order-service database is the canonical source of truth for order state."                                             |
+| `rule_statement`          | An imperative sentence describing the standard. “All services that require durable persistence must use PostgreSQL 15 or later.”                               |
+| `fact_statement`          | One paragraph stating what is true. “The order-service database is the canonical source of truth for order state.”                                             |
 | `exception_to`            | The UUID of the PolicyRule being deviated from. Required.                                                                                                      |
-| `justification`           | Why the deviation is warranted. Specific technical or operational constraint that prevents compliance, plus what replaces the rule's protection.               |
+| `justification`           | Why the deviation is warranted. Specific technical or operational constraint that prevents compliance, plus what replaces the rule’s protection.               |
 | `applies_to`              | The scope the record governs. Services, domains, systems. This is what makes your record findable. Thin `applies_to` means the record is invisible to queries. |
-| `tags`                    | Topical labels so queries like "show me everything about event sourcing" find your record.                                                                     |
+| `tags`                    | Topical labels so queries like “show me everything about event sourcing” find your record.                                                                     |
 
-## Worked examples
+## Worked Examples
 
 ### Decision
 
@@ -167,14 +171,17 @@ compensating_controls:
 ---
 ```
 
-## Common authorship mistakes, architect edition
+## Common Authorship Mistakes, Architect Edition
 
-**Writing a Decision as a Context.** "We use Kafka for commerce events" reads like a fact, but if the choice could have gone the other way, it's a Decision. The test: is there a `decision_question` you could frame? If yes, it's a Decision.
-
-**Writing a PolicyRule when you mean a Decision.** A standing rule applies to many future choices. A single choice, however important, is still a Decision. "We decided to adopt Postgres for the commerce domain" is a Decision; "all persistent services must use Postgres" is the PolicyRule that might come after.
-
-**Skipping `applies_to` because it feels obvious.** The frontmatter is what an agent uses to find your record. "Obvious from the body" means unfindable.
-
-**Leaving `alternatives_considered` thin.** If the only alternative is "do nothing," either the decision was foregone or the thinking isn't captured. A future reader (or agent) will assume the alternative was never considered.
-
-**Exceptions without compensating controls.** An Exception removes a rule's protection. If you can't say what replaces it, you're accepting risk without naming it — not the same as accepting risk knowingly.
+- **Writing a Decision as a Context.**
+	- “We use Kafka for commerce events” reads like a fact, but if the choice could have gone the other way, it’s a Decision.
+	- The test: is there a `decision_question` you could frame? If yes, it’s a Decision.
+- **Writing a PolicyRule when you mean a Decision.**
+	- A standing rule applies to many future choices. A single choice, however important, is still a Decision.
+	- “We decided to adopt Postgres for the commerce domain” is a Decision; “all persistent services must use Postgres” is the PolicyRule that might come after.
+- **Skipping `applies_to` because it feels obvious.**
+	- The frontmatter is what an agent uses to find your record. “Obvious from the body” means unfindable.
+- **Leaving `alternatives_considered` thin.**
+	- If the only alternative is “do nothing,” either the decision was foregone, or the thinking isn’t captured. A future reader (or agent) will assume the alternative was never considered.
+- **Exceptions without compensating controls.**
+	- An Exception removes a rule’s protection. If you can’t say what replaces it, you’re accepting risk without naming it, which isn’t the same as accepting risk knowingly.

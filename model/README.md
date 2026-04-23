@@ -1,32 +1,32 @@
 # Memory Bank Model
 
-Architecture overview for the memory bank. This is the condensed version — each section points to the full spec file for deeper detail.
+Architecture overview for the memory bank. This is the condensed version; each section points to the full spec file for deeper detail.
 
 ## Reading Order
 
 The numbered files build on each other:
 
-1. [00-retrieval-model.md](00-retrieval-model.md) — How agents find records. Explains why the schema is shaped the way it is.
-2. [01-base-memory-record.md](01-base-memory-record.md) — The shared schema every record extends.
-3. [02-decision.md](02-decision.md) — The `Decision` type.
-4. [03-policy-rule.md](03-policy-rule.md) — The `PolicyRule` type.
-5. [04-exception.md](04-exception.md) — The `Exception` type.
-6. [05-context.md](05-context.md) — The `Context` type.
-7. [06-relationships.md](06-relationships.md) — How records link to each other.
+1. [00-retrieval-model.md](00-retrieval-model.md): How agents find records. Explains why the schema is shaped the way it is.
+2. [01-base-memory-record.md](01-base-memory-record.md): The shared schema every record extends.
+3. [02-decision.md](02-decision.md): The `Decision` type.
+4. [03-policy-rule.md](03-policy-rule.md): The `PolicyRule` type.
+5. [04-exception.md](04-exception.md): The `Exception` type.
+6. [05-context.md](05-context.md): The `Context` type.
+7. [06-relationships.md](06-relationships.md): How records link to each other.
 
-For authorship in your own voice — when you write records, what they look like filled in by your role — see the per-persona guides in [`by-persona/`](by-persona/). Start there if you want to see yourself in the model before reading the schema files.
+For authorship in your own voice (when you write records, what they look like filled in by your role) see the per-persona guides in [`by-persona`](by-persona/README.md). Start there if you want to see yourself in the model before reading the schema files.
 
 ## Authorship Map
 
 The four types apply to every role. What changes is the moment that produces the record and the language that fills the fields.
 
-| Persona | Decision | Context | PolicyRule | Exception |
-| --- | --- | --- | --- | --- |
-| **Architect** | Architectural choice made under constraints (event sourcing, persistence, topology) | System fact learned or confirmed (air-gapped network, canonical source of truth) | Standing architectural pattern (Postgres standard, mTLS baseline) | Granting or documenting a sanctioned technical deviation |
-| **PM / Product Owner** | Prioritization call, scope boundary, launch sequencing | Customer/market fact, segment truth, commitment (tag as `commitment`) | Product principle (self-serve promise, tier gating) | Customer- or release-specific carve-out against a product principle |
-| **Developer** | Library/tool choice, implementation pattern with reach | Gotcha, performance characteristic, vendor behavior | Team practice codified as a standard (all HTTP calls through a wrapper) | Workaround accepted against a team or enterprise standard |
+| Persona                | Decision                                                                            | Context                                                                          | PolicyRule                                                              | Exception                                                           |
+| ---------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| **Architect**          | Architectural choice made under constraints (event sourcing, persistence, topology) | System fact learned or confirmed (air-gapped network, canonical source of truth) | Standing architectural pattern (Postgres standard, mTLS baseline)       | Granting or documenting a sanctioned technical deviation            |
+| **PM / Product Owner** | Prioritization call, scope boundary, launch sequencing                              | Customer/market fact, segment truth, commitment (tag as `commitment`)            | Product principle (self-serve promise, tier gating)                     | Customer- or release-specific carve-out against a product principle |
+| **Developer**          | Library/tool choice, implementation pattern with reach                              | Gotcha, performance characteristic, vendor behavior                              | Team practice codified as a standard (all HTTP calls through a wrapper) | Workaround accepted against a team or enterprise standard           |
 
-The deeper version — triggers, field-fill cheat sheets, and full worked records for each cell — lives in the [per-persona guides](by-persona/).
+The deeper version (triggers, field-fill cheat sheets, and full worked records for each cell) lives in the [per-persona guides](by-persona/README.md).
 
 ## The Retrieval Model
 
