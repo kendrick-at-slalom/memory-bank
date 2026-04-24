@@ -203,10 +203,10 @@ scope_boundary: >
 
 ## Tips
 
+For universal practices (frontmatter discipline, lifecycle, cross-role work, verification), see [Leading Practices](../leading-practices.md). The tips below are developer-specific.
+
 - Before you implement, ask Copilot what rules and decisions apply to the scope you're about to touch. If nothing comes back, either the bank is thin for that area or your scoping is off.
-- When you write an Exception (a workaround against a standard), always fill `review_by`. Exceptions without review dates become permanent shadow rules that nobody revisits.
 - Context records about gotchas and vendor quirks punch above their weight. They capture knowledge that otherwise lives only in the heads of people who got burned.
-- Decisions that reference an architect's PolicyRule via `constrained_by` are more useful than standalone Decisions. The link tells Copilot which rules shaped your choice.
 
 ## Typical Search Patterns
 

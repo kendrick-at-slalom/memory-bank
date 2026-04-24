@@ -196,8 +196,9 @@ scope_boundary: >
 
 ## Tips
 
+For universal practices (frontmatter discipline, lifecycle, cross-role work, verification), see [Leading Practices](../leading-practices.md). The tips below are PM/PO-specific.
+
 - Your Context records are often the _inputs_ to someone else's Decision. A customer commitment you capture today shows up as a `constrained_by` reference in an architect's Decision tomorrow. That's the cross-role link working.
-- Use consistent vocabulary in `applies_to` and `tags`. If you call a segment "enterprise" in one record and "ent" in another, queries that use one term will miss the other.
 - Commitments with deadlines belong in Context records, not in task trackers. The memory bank captures the _fact_ of the commitment; the tracker manages the _work_ to fulfill it.
 
 ## Typical Search Patterns

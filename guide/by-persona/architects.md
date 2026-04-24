@@ -193,10 +193,9 @@ compensating_controls:
 
 ## Tips
 
+For universal practices (frontmatter discipline, lifecycle, cross-role work, verification), see [Leading Practices](../leading-practices.md). The tips below are architect-specific.
+
 - Start with your most recent design review. The decision you made there is your first record.
-- `applies_to` matters more than any other field for architects. If your record doesn't name the services, domains, or systems it governs, nobody's agent will find it.
-- When you write a PolicyRule, think about who might need an Exception against it. If the answer is "probably someone, eventually," make sure the PolicyRule's `id` is something you can reference later.
-- Decisions that reference PolicyRules via `constrained_by` are more useful than standalone Decisions. The link tells Copilot which rules shaped the choice.
 
 ## Typical Search Patterns
 

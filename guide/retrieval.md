@@ -75,26 +75,6 @@ You’re usually looking for Decisions that shape what’s possible for a featur
 
 If you’re deciding whether to accept an intake request, the funnel gives you a quick read on the decision context that’s already captured. A request with nothing to anchor to (no Context, no Decisions) is a signal to probe harder, not a signal to fast-track.
 
-## Verifying a Record Is Findable
+## See Also
 
-After you write a record, confirm it’s retrievable before you call it hydrated. Ask Copilot the question the record was meant to answer. The record should show up in the citations.
-
-You can verify from any surface:
-
-- **Copilot Spaces:** ask in your Space
-- **IDE Copilot:** open the memory bank repo, ask the question
-- **Copilot CLI:** run from the repo directory
-
-If the record doesn’t surface:
-
-- Check `applies_to`. Empty `applies_to`, or values that use different vocabulary than your question, make the record invisible to the scope pass.
-- Check `status`. Records in `draft` or `superseded` state may be filtered out.
-- Check that the record is in the right Space (if using Spaces) or the right directory.
-
-Fix the frontmatter and re-ask. If the record surfaces, it’s hydrated correctly. If it still doesn’t, the question you’re asking probably doesn’t line up with the vocabulary you tagged. That’s a mismatch, not a broken system. Adjust the tags, or adjust how your team phrases the question, and try again.
-
-## What Not to Build
-
-Don’t maintain an index file listing what’s in the bank. The filesystem or Copilot will answer that query on demand. An index drifts every time a record is added, renamed, or superseded, and it teaches you to consult the wrong thing.
-
-If you need a current inventory, generate it. `Grep "^title:" decisions/` gives you a list of decision titles. The Copilot equivalent is asking it to summarize what’s in the repo. Both stay current; an index file doesn’t.
+- [Leading Practices](leading-practices.md): frontmatter discipline, lifecycle, cross-role work, anti-patterns, and how to verify your records are findable.
