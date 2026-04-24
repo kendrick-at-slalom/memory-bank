@@ -17,9 +17,9 @@ Architect work produces records at these moments:
 
 The common thread:
 
-- If you’re **explaining the _why_ of a system shape** to someone who wasn’t in the room, you’re most often writing a **`Decision`** or a **`Context`**
-- If you’re **describing the rules** that govern code being generated inside your scope, you’re writing **`PolicyRules`**
-- If you’re recording a **carve-out** from one of those rules, you’re writing an **`Exception`**
+- If you’re **explaining the _why_ of a system shape** to someone who wasn’t in the room, you’re most often writing a **Decision** or a **Context**
+- If you’re **describing the rules** that govern code being generated inside your scope, you’re writing **PolicyRules**
+- If you’re recording a **carve-out** from one of those rules, you’re writing an **Exception**
 
 ## Field-fill Cheat Sheet
 

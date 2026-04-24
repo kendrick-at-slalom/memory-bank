@@ -2,7 +2,7 @@
 
 ## What This Is
 
-Every record in the memory bank[^togaf-repository] shares a common set of fields, regardless of type. This is the base `MemoryRecord`. The four specializations (`Decision`, `Context`, `PolicyRule`, `Exception`) extend this base by adding type-specific fields.
+Every record in the memory bank[^togaf-repository] shares a common set of fields, regardless of type. This is the base MemoryRecord. The four specializations (Decision, Context, PolicyRule, Exception) extend this base by adding type-specific fields.
 
 Think of it like a class hierarchy: the base record gives you identity, lifecycle, provenance, and relationships. The specializations give you the details that make each type useful.
 

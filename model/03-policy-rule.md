@@ -2,7 +2,7 @@
 
 ## What a PolicyRule Is
 
-A `PolicyRule` record captures standing guidance[^togaf-principles]: _normally, this is how we do things_. It answers the question "What rules should I follow?"
+A PolicyRule record captures standing guidance[^togaf-principles]: _normally, this is how we do things_. It answers the question "What rules should I follow?"
 
 Where a Decision is a specific choice at a point in time, a PolicyRule is a rule that applies to many future choices. "We chose Kafka for the order domain" is a Decision. "All event streaming must use Kafka unless a documented Exception applies" is a PolicyRule. The Decision is historical; the PolicyRule is forward-looking and imperative.
 

@@ -2,7 +2,7 @@
 
 ## What a Context Is
 
-A `Context` record captures an environmental fact: _this is true right now (or during a specified period)._ It answers the question "What's the situation?"
+A Context record captures an environmental fact: _this is true right now (or during a specified period)._ It answers the question "What's the situation?"
 
 Where Decisions capture choices, PolicyRules capture standing guidance, and Exceptions capture sanctioned deviations, Context captures the _world in which all of those happen_. Context is descriptive, not prescriptive. It doesn't tell anyone what to do; it tells them what is.
 

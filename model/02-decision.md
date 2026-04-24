@@ -2,7 +2,7 @@
 
 ## What a Decision Is
 
-A `Decision` record captures a choice: _we considered options, we picked one, here's why_. It answers the question "Why is it built this way?"
+A Decision record captures a choice: _we considered options, we picked one, here's why_. It answers the question "Why is it built this way?"
 
 Decisions map onto something most technical teams already know: the Architecture Decision Record (ADR).[^nygard] A Decision record is functionally an ADR with richer frontmatter. Teams who have written ADRs will recognize the shape immediately. Architecture decisions are also a normative concept in [ISO/IEC/IEEE 42010:2022](https://www.iso.org/standard/74393.html)[^iso42010], the international standard for architecture description. The 2022 revision explicitly incorporates architecture decisions as an element of an architecture description, alongside stakeholders, concerns, views, and rationale.
 

@@ -2,7 +2,7 @@
 
 ## What an Exception Is
 
-An `Exception` record captures a sanctioned deviation from a PolicyRule: _we broke the rule, intentionally, here's why, and here's who approved it._
+An Exception record captures a sanctioned deviation from a PolicyRule: _we broke the rule, intentionally, here's why, and here's who approved it._
 
 Exceptions are the shortest type in terms of content but arguably the highest-value type for trust and audit. They turn "somebody told me it was okay" into a first-class, auditable record. In environments with safety regimes, cybersecurity standards, long-lived systems, or formal change control, exceptions are not optional bookkeeping, they're how the organization proves it's managing risk consciously rather than accidentally.
 

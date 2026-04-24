@@ -8,10 +8,10 @@ The numbered files build on each other:
 
 1. [00-retrieval-model.md](00-retrieval-model.md): How agents find records. Explains why the schema is shaped the way it is.
 2. [01-base-memory-record.md](01-base-memory-record.md): The shared schema every record extends.
-3. [02-decision.md](02-decision.md): The `Decision` type.
-4. [03-policy-rule.md](03-policy-rule.md): The `PolicyRule` type.
-5. [04-exception.md](04-exception.md): The `Exception` type.
-6. [05-context.md](05-context.md): The `Context` type.
+3. [02-decision.md](02-decision.md): The Decision type.
+4. [03-policy-rule.md](03-policy-rule.md): The PolicyRule type.
+5. [04-exception.md](04-exception.md): The Exception type.
+6. [05-context.md](05-context.md): The Context type.
 7. [06-relationships.md](06-relationships.md): How records link to each other.
 
 For authorship in your own voice (when you write records, what they look like filled in by your role) see the per-persona guides in [`by-persona`](by-persona/README.md). Start there if you want to see yourself in the model before reading the schema files.
@@ -70,7 +70,7 @@ Full spec: [01-base-memory-record.md](01-base-memory-record.md)
 
 ### Decision
 
-A `Decision` captures a choice made at a point in time. It answers _why is it built this way?_ Decisions map directly onto ADRs, which makes them a natural entry point for teams already familiar with architecture decision records. A Decision adds `decision_question`, `decision_outcome`, `alternatives_considered`, `decision_drivers`, and `approved_by` on top of the base schema.
+A Decision captures a choice made at a point in time. It answers _why is it built this way?_ Decisions map directly onto ADRs, which makes them a natural entry point for teams already familiar with architecture decision records. A Decision adds `decision_question`, `decision_outcome`, `alternatives_considered`, `decision_drivers`, and `approved_by` on top of the base schema.
 
 **Rule of thumb:** if a reasonable person could have picked a different option and this record says which one was picked, it’s a Decision.
 
@@ -78,13 +78,13 @@ Full spec: [02-decision.md](02-decision.md)
 
 ### PolicyRule
 
-A `PolicyRule` captures standing guidance: _this is how we do things_. Where a Decision is retrospective, a PolicyRule is forward-looking and imperative. The required fields are `rule_statement` and `enforcement` (one of `required`, `recommended`, or `advisory`). The `enforcement` tier shapes how agents behave: a `required` rule is a hard constraint at generation time; an `advisory` rule is context the agent surfaces without acting on it.
+A PolicyRule captures standing guidance: _this is how we do things_. Where a Decision is retrospective, a PolicyRule is forward-looking and imperative. The required fields are `rule_statement` and `enforcement` (one of `required`, `recommended`, or `advisory`). The `enforcement` tier shapes how agents behave: a `required` rule is a hard constraint at generation time; an `advisory` rule is context the agent surfaces without acting on it.
 
 Full spec: [03-policy-rule.md](03-policy-rule.md)
 
 ### Exception
 
-An `Exception` captures a **sanctioned deviation from a PolicyRule**. Every Exception points at exactly one PolicyRule through its required `exception_to` field. If there’s no rule to point at, you have a Decision or a Context, not an Exception. The other required fields are `justification` and `approved_by`.
+An Exception captures a **sanctioned deviation from a PolicyRule**. Every Exception points at exactly one PolicyRule through its required `exception_to` field. If there’s no rule to point at, you have a Decision or a Context, not an Exception. The other required fields are `justification` and `approved_by`.
 
 Track exceptions as first-class records. Exceptions that live in Slack threads or verbal agreements are invisible to agents and impossible to audit. An Exception record turns informal permission into something governed and time-bounded. Teams that skip this accumulate shadow rules — informal deviations that nobody can find, review, or expire.
 
@@ -92,7 +92,7 @@ Full spec: [04-exception.md](04-exception.md)
 
 ### Context
 
-A `Context` captures an environmental fact: _this is true right now_. It is descriptive rather than prescriptive. Context adds `context_scope` and `fact_statement` as required fields. Context is the loosest type and the one every role on a team produces — it’s where the shared-backbone claim becomes concrete.
+A Context captures an environmental fact: _this is true right now_. It is descriptive rather than prescriptive. Context adds `context_scope` and `fact_statement` as required fields. Context is the loosest type and the one every role on a team produces — it’s where the shared-backbone claim becomes concrete.
 
 Full spec: [05-context.md](05-context.md)
 

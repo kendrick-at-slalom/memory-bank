@@ -23,13 +23,11 @@ Library choices and implementation patterns that reach beyond a single PR are th
 - You discovered a gotcha or vendor behavior that others will hit
 - You accepted a workaround against a standard and got it sanctioned
 
-If the next person would benefit from not having to re-discover this, it belongs in the bank.
+>If the next person would benefit from not having to re-discover this, it belongs in the bank.
 
 ## Going Deeper
 
-The full authorship guide covers the field-fill cheat sheet in developer voice, a worked example per record type, and how your Decisions relate to architect PolicyRules (e.g., a library choice `constrained_by` a platform wrapper rule):
-
-[Developer Authorship Guide](../../model/by-persona/developer-authorship.md)
+The full authorship guide covers the field-fill cheat sheet in developer voice, a worked example per record type, and how your Decisions relate to architect PolicyRules (e.g., a library choice `constrained_by` a platform wrapper rule): [Developer Authorship Guide](../../model/by-persona/developer-authorship.md)
 
 For typical search patterns, see [Retrieval: Developer Queries](../retrieval.md#developers).
 
