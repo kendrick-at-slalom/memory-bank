@@ -53,6 +53,18 @@ Every record in the memory bank is one of four types. They share a common base s
 
 For full type definitions: [`model/02-decision.md`](../model/02-decision.md), [`model/03-policy-rule.md`](../model/03-policy-rule.md), [`model/04-exception.md`](../model/04-exception.md), [`model/05-context.md`](../model/05-context.md).
 
+## Authorship Map
+
+The four types apply to every role. What changes is the moment that produces the record and the language that fills the fields.
+
+| Persona                | Decision                                                                            | Context                                                                          | PolicyRule                                                              | Exception                                                           |
+| ---------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| **Architect**          | Architectural choice made under constraints (event sourcing, persistence, topology) | System fact learned or confirmed (air-gapped network, canonical source of truth) | Standing architectural pattern (Postgres standard, mTLS baseline)       | Granting or documenting a sanctioned technical deviation            |
+| **PM / Product Owner** | Prioritization call, scope boundary, launch sequencing                              | Customer/market fact, segment truth, commitment (tag as `commitment`)            | Product principle (self-serve promise, tier gating)                     | Customer- or release-specific carve-out against a product principle |
+| **Developer**          | Library/tool choice, implementation pattern with reach                              | Gotcha, performance characteristic, vendor behavior                              | Team practice codified as a standard (all HTTP calls through a wrapper) | Workaround accepted against a team or enterprise standard           |
+
+The deeper version (triggers, field-fill cheat sheets, and full worked records for each cell) lives in the per-persona hydration guides: [Architects](by-persona/architects.md), [PMs / POs](by-persona/pms.md), [Developers](by-persona/developers.md).
+
 ## Frontmatter Is the Interface
 
 Structured frontmatter fields determine whether Copilot can find your record. A record with thin frontmatter is invisible to the scope pass regardless of how well the body is written. The body is for humans; the frontmatter is for the agent.

@@ -16,18 +16,6 @@ The numbered files build on each other:
 
 For authorship in your own voice (when you write records, what they look like filled in by your role), see the per-persona hydration guides: [Architects](../guide/by-persona/architects.md), [PMs / POs](../guide/by-persona/pms.md), [Developers](../guide/by-persona/developers.md). Start there if you want to see yourself in the model before reading the schema files.
 
-## Authorship Map
-
-The four types apply to every role. What changes is the moment that produces the record and the language that fills the fields.
-
-| Persona                | Decision                                                                            | Context                                                                          | PolicyRule                                                              | Exception                                                           |
-| ---------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| **Architect**          | Architectural choice made under constraints (event sourcing, persistence, topology) | System fact learned or confirmed (air-gapped network, canonical source of truth) | Standing architectural pattern (Postgres standard, mTLS baseline)       | Granting or documenting a sanctioned technical deviation            |
-| **PM / Product Owner** | Prioritization call, scope boundary, launch sequencing                              | Customer/market fact, segment truth, commitment (tag as `commitment`)            | Product principle (self-serve promise, tier gating)                     | Customer- or release-specific carve-out against a product principle |
-| **Developer**          | Library/tool choice, implementation pattern with reach                              | Gotcha, performance characteristic, vendor behavior                              | Team practice codified as a standard (all HTTP calls through a wrapper) | Workaround accepted against a team or enterprise standard           |
-
-The deeper version (triggers, field-fill cheat sheets, and full worked records for each cell) lives in the per-persona hydration guides: [Architects](../guide/by-persona/architects.md), [PMs / POs](../guide/by-persona/pms.md), [Developers](../guide/by-persona/developers.md).
-
 ## The Retrieval Model
 
 Retrieval happens in two passes:

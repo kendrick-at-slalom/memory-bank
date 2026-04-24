@@ -2,7 +2,7 @@
 
 > **What this repo is:** A reference architecture for structured knowledge layers that AI coding assistants can query at generation time. It defines four record types, a shared base schema, a retrieval model, and a relationship vocabulary.
 >
-> **What this repo is NOT:** A template library, a pre-populated knowledge base, or a notes/capture pipeline. How records get *into* the memory bank (meeting notes, grooming workflows, promotion processes) is an implementation concern for the adopting team, not part of this architecture.
+> **What this repo is NOT:** A template library, a pre-populated knowledge base, or a notes/capture pipeline. How records get _into_ the memory bank (meeting notes, grooming workflows, promotion processes) is an implementation concern for the adopting team, not part of this architecture.
 
 ## Repo Layout
 
@@ -53,12 +53,12 @@ If an agent internalizes nothing else from this repo, it should be these:
 
 When querying a memory bank, always start cheap and narrow progressively:
 
-| Stage | Operation | Cost | What it does |
-|---|---|---|---|
-| 1 | Glob on filenames | Zero content loaded | Narrow by type (subfolder), slug, date |
-| 2 | Grep on frontmatter | Lines 1–15 per file | Filter structured fields without loading bodies |
-| 3 | Frontmatter-only read | ~300 tokens per record | Pull just the YAML header of surviving candidates |
-| 4 | Full body read | Full token cost | Only for the 3–5 records that actually matter |
+| Stage | Operation             | Cost                   | What it does                                      |
+| ----- | --------------------- | ---------------------- | ------------------------------------------------- |
+| 1     | Glob on filenames     | Zero content loaded    | Narrow by type (subfolder), slug, date            |
+| 2     | Grep on frontmatter   | Lines 1–15 per file    | Filter structured fields without loading bodies   |
+| 3     | Frontmatter-only read | ~300 tokens per record | Pull just the YAML header of surviving candidates |
+| 4     | Full body read        | Full token cost        | Only for the 3–5 records that actually matter     |
 
 **Anti-pattern:** Reading every record in full to find matches. If you catch yourself doing this, go back to stage 1. The funnel exists because memory banks grow — what works with 10 records must also work with 500.
 
@@ -77,6 +77,7 @@ proposed → accepted → [superseded | deprecated | rejected]
 - **`rejected`** — Considered and explicitly declined. Kept for history.
 
 **Supersession is a two-record operation.** When a record is superseded:
+
 1. Old record: `status` → `superseded`, `superseded_by` → UUID of the new record.
 2. New record: `supersedes` → [UUID of the old record].
 3. Both records remain in the memory bank — history is preserved, not deleted.
@@ -89,4 +90,6 @@ An agent encountering a `superseded` record should always resolve the chain to f
 - **The model/ docs have accumulated rationale.** Read a file end-to-end before modifying it. Sections like "open questions" and "common mistakes" carry hard-won reasoning. Don't lose them in edits.
 - **Lean over comprehensive.** The model's core design principle is that adoption matters more than completeness. When in doubt about adding a field, type, or concept — don't. Let real observed need justify additions.
 - **SCAFFOLD.md is executable.** Changes to the model should be reflected in SCAFFOLD.md's templates and instructions. The two must stay consistent.
-- **README.md is the human entry point.** It should stay readable as a standalone overview. Deep detail belongs in the model/ docs, not in the README.
+- **README.md is the human entry point.** It should stay readable as a standalone overview. Deep schema detail belongs in `model/`, deep practice detail belongs in `guide/`, not in the README.
+- **`model/` is schema; `guide/` is practice.** The `model/` tree holds the schema spec (retrieval model, base record, four types, relationships). The `guide/` tree holds practitioner-facing content: setup, authorship, verification, leading practices. When content is on the fence, default to `guide/`.
+- **Persona-specific guidance breaks out into its own file.** Content that varies by role (authorship triggers in role voice, worked examples in role voice, role-specific tips) lives in `guide/by-persona/{architects,pms,developers}.md`. Content that applies to all personas (the four types, retrieval mechanics, frontmatter discipline) stays in shared files. When a piece of content acquires per-role variations, that's the signal to split.
