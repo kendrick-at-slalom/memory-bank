@@ -61,11 +61,11 @@ The most important field is `applies_to`. If you fill nothing else beyond the re
 
 ## Steering Copilot with `copilot-instructions.md`
 
-A `.github/copilot-instructions.md` file in your repo tells Copilot how to work with your memory bank. IDE Copilot, Copilot CLI, and the Copilot coding agent all read it automatically. You configure once; all surfaces pick it up.
+A `.github/copilot-instructions.md` file[^copilot-instructions] in your repo tells Copilot how to work with your memory bank. IDE Copilot, Copilot CLI, and the Copilot coding agent all read it automatically. You configure once; all surfaces pick it up.
 
 A starter template is available at [`copilot-instructions.md`](../copilot-instructions.md) in the repo root. Copy it into your memory bank repo’s `.github/` directory and adjust the values for your team.
 
-If you use Copilot Spaces, the Space scoping works alongside `copilot-instructions.md` — the instructions tell Copilot _how_ to use the memory bank, the Space tells it _which repos to look in_.
+If you use Copilot Spaces[^copilot-spaces], the Space scoping works alongside `copilot-instructions.md` — the instructions tell Copilot _how_ to use the memory bank, the Space tells it _which repos to look in_.
 
 ## Writing Your First Record
 
@@ -80,3 +80,7 @@ Start with a Context record. It’s the simplest type: a fact about your environ
 For a complete worked example of a Context record, see [`examples/context/`](../examples/context/).
 
 Once you’ve written your first record, read the [retrieval guide](retrieval.md) to understand how Copilot finds records and how to verify yours are working. Then jump to your role’s hydration guide for triggers and worked examples.
+
+[^copilot-instructions]: `.github/copilot-instructions.md` is GitHub Copilot's repository-scoped custom instructions file. Instructions in the file are automatically added to Copilot requests whenever the repo is in scope — across the IDE extensions, the coding agent on github.com, and the Copilot CLI. See [GitHub Docs: Adding repository custom instructions for GitHub Copilot](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions); [GitHub Docs: Adding custom instructions for GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions).
+
+[^copilot-spaces]: Copilot Spaces let you organize the context Copilot uses to answer questions — repositories, pull requests, issues, free-text notes, and file uploads — and share that scoped context with a team. Spaces are available to any Copilot license tier, including Copilot Free. See [GitHub Docs: About GitHub Copilot Spaces](https://docs.github.com/en/copilot/concepts/context/spaces).
