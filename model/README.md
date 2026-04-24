@@ -212,15 +212,3 @@ flowchart TD
 ```
 
 Same model as the architecture examples, same relationships, different content. The PM who wrote the delay Decision didn't invent a new record type; the standard Decision shape held up. When the Q3 launch approaches and someone asks "why did we hold tier-2?", the Decision cites both Contexts and the answer is one query away.
-
-## Physical Organization Options
-
-How you organize your memory bank physically determines the first-level retrieval filter:
-
-| Option               | Structure                                                 | Best for                                                |
-| -------------------- | --------------------------------------------------------- | ------------------------------------------------------- |
-| A: Per-role/function | `architecture-memory-bank/`, `product-memory-bank/`, etc. | Federated teams, distinct governance per role           |
-| B: Per-domain        | `commerce-memory-bank/`, `platform-memory-bank/`, etc.    | Strong domain ownership, cross-functional collaboration |
-| C: Single repo       | `memory-bank/decisions/`, `memory-bank/context/`, etc.    | Small teams, single products, individual use            |
-
-The [scaffold prompt](../SCAFFOLD.md) helps you choose based on your situation.

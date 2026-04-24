@@ -14,8 +14,9 @@ You are going to help me set up a memory bank for my project — a structured kn
 The memory bank model is documented in this repo. Before we begin, read the following files to understand the model:
 
 - README.md (overview)
-- model/README.md (condensed model overview with the authorship map)
-- model/00-retrieval-model.md (how agents find records — especially the four-stage funnel)
+- guide/README.md (practitioner-facing hydration guide: what a memory bank is, how to organize it, writing a first record)
+- model/README.md (condensed schema overview with the authorship map)
+- model/00-retrieval-model.md (how agents find records, especially the four-stage funnel)
 - model/01-base-memory-record.md (shared schema)
 
 Also note that `guide/by-persona/` contains hydration guides for architects, PMs, and developers; same schema, role-specific voice and worked examples. You don't need to read them yet; you'll point me at the right one once you know who will be writing records (Question 2).

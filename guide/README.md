@@ -67,6 +67,18 @@ A starter template is available at [`copilot-instructions.md`](../copilot-instru
 
 If you use Copilot Spaces[^copilot-spaces], the Space scoping works alongside `copilot-instructions.md` — the instructions tell Copilot _how_ to use the memory bank, the Space tells it _which repos to look in_.
 
+## Physical Organization
+
+Before you write records, pick how your memory bank is organized. The structure determines where files live, which is the first-level retrieval filter.
+
+| Option               | Structure                                                 | Best for                                                |
+| -------------------- | --------------------------------------------------------- | ------------------------------------------------------- |
+| A: Per-role/function | `architecture-memory-bank/`, `product-memory-bank/`, etc. | Federated teams, distinct governance per role           |
+| B: Per-domain        | `commerce-memory-bank/`, `platform-memory-bank/`, etc.    | Strong domain ownership, cross-functional collaboration |
+| C: Single repo       | `memory-bank/decisions/`, `memory-bank/context/`, etc.    | Small teams, single products, individual use            |
+
+The [scaffold prompt](../SCAFFOLD.md) helps you choose based on your situation.
+
 ## Writing Your First Record
 
 Start with a Context record. It's the simplest type: a fact about your environment that other roles need at generation time.
