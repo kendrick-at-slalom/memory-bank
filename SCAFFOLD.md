@@ -1,126 +1,220 @@
 # Memory Bank Scaffold Prompt
 
-> **What this is:** An executable prompt for an AI coding assistant. Copy the content below into a conversation with your agent (Claude Code, Copilot, Cursor, etc.) to interactively scaffold a memory bank for your project.
+> **What this is:** An executable prompt for an AI coding assistant. Copy the content below into a conversation with your agent (Claude Code, Copilot, Cursor, etc.) to interactively scaffold a memory bank.
 >
-> **Prerequisites:** The agent should have access to this repo's files as reference (clone it or point the agent at it). The agent needs write access to the target project where the memory bank will live.
+> **Prerequisites:** The agent needs access to this repo's files as reference (clone it or point the agent at it) and write access to the target project (or target memory bank repo) where the bank will live.
+
+---
+
+## How to Use This Prompt
+
+1. Clone or download this repo.
+2. Open a conversation with your AI coding assistant.
+3. Make sure the agent can read this repo's files (the scaffold references them).
+4. Copy everything inside the four-backtick fence below (`The Prompt` section) into the agent chat.
+5. Answer the questions as they come. The prompt asks the agent to use clickable choices wherever possible; if your tooling supports `AskUserQuestion`-style selection you'll click through, otherwise you'll reply with numbers.
+6. Review what was scaffolded and start writing records.
+
+The scaffold creates the structure, templates, and agent instructions file. The model docs in `model/` and the hydration guide in `guide/` are the reference for how to fill records well.
+
+The interview leads with a scope question (project / team / domain / org / larger). Scope is the most consequential choice in the setup because it determines how much cross-cutting knowledge ends up in one bank versus fragmented across many.
 
 ---
 
 ## The Prompt
 
-```markdown
-You are going to help me set up a memory bank for my project — a structured knowledge layer that AI coding assistants can query to find decisions, rules, exceptions, and environmental facts about our work.
+````markdown
+You are going to help me set up a memory bank: a structured knowledge layer that AI coding assistants can query to find decisions, rules, exceptions, and environmental facts about the scope it serves.
 
-The memory bank model is documented in this repo. Before we begin, read the following files to understand the model:
+Before we begin, read the following files in this reference repo:
 
-- README.md (overview)
-- guide/README.md (practitioner-facing hydration guide: what a memory bank is, how to organize it, writing a first record)
-- model/README.md (condensed schema overview with the authorship map)
-- model/00-retrieval-model.md (how agents find records, especially the four-stage funnel)
-- model/01-base-memory-record.md (shared schema)
+- `README.md` (overview)
+- `guide/README.md` (practitioner-facing hydration guide: what a memory bank is, how to organize it, writing a first record)
+- `model/README.md` (condensed schema overview with the authorship map)
+- `model/00-retrieval-model.md` (how agents find records, especially the four-stage funnel)
+- `model/01-base-memory-record.md` (shared schema)
 
-Also note that `guide/by-persona/` contains hydration guides for architects, PMs, and developers; same schema, role-specific voice and worked examples. You don't need to read them yet; you'll point me at the right one once you know who will be writing records (Question 2).
+Also note that `guide/by-persona/` contains hydration guides for architects, PMs, and developers (same schema, role-specific voice and worked examples). You don't need to read them yet; you'll point me at the right one once you know who will be writing records.
 
-Then ask me the following questions ONE AT A TIME, waiting for my answer before proceeding to the next. Use my answers to configure the scaffold.
+## How to run this interview
+
+Ask me each question ONE AT A TIME, waiting for my answer before proceeding to the next. **Whenever a question has enumerable options, present them using `AskUserQuestion` (or your tooling's equivalent clickable-choice interface). If no clickable UI is available, present options as a numbered list and ask me to reply with the number.** For questions that are genuinely freeform, ask freeform.
+
+Use my answers to configure the scaffold. If an answer sounds ambiguous, ask a short clarifying follow-up.
+
+The first question is about **bank scope**; it's the most consequential choice in the setup. Be intentional there, and gently push back if I pick the narrowest option out of habit rather than because the scope genuinely is that narrow.
 
 ---
 
-### Question 1: Project context
+### Question 1: Bank scope
 
-"Tell me about your project. What does your team build, and roughly how many people contribute? (This helps me choose the right physical organization and scope conventions.)"
+The memory bank model works at any scope: project, team, domain, org, cross-org. Broader is often better when governance supports it: broader banks reduce fragmentation and let cross-cutting knowledge (PolicyRules, Context, Decisions that span teams) be authored once and found by everyone. Narrow enough to match the actual governance boundary is the target; don't pick narrower than necessary.
+
+(Clickable.) "What scope will this memory bank serve?"
+
+Options:
+
+1. **A single project or repo.** Best when the project is genuinely self-contained and won't share knowledge with sibling projects.
+2. **A team.** One governance, may span multiple projects or repos the team owns.
+3. **A domain.** Cross-team scope (e.g., "commerce", "platform", "OT plant floor"). Multiple teams contribute under domain-level governance.
+4. **An org or division.** Cross-domain scope. Strong governance needed; benefits are large for cross-domain learning.
+5. **Something else (I'll describe).**
+
+If I pick option 1, probe briefly: "Is there a team-scope or domain-scope bank that could serve this project alongside siblings? Per-project banks fragment knowledge that usually wants to be shared." Accept the answer either way; don't push hard.
 
 ---
 
-### Question 2: Roles
+### Question 2: Scope context
 
-"Who will write records in this memory bank? Is it just you, a single team, or multiple roles (e.g., architects, PMs, designers, developers, support)? This determines whether we organize by role, by domain, or as a single flat structure."
+(Freeform.) "Tell me about the scope you picked in a few sentences. What does it cover and why did you draw the boundary there? (This helps me choose sensible defaults and name things well.)"
 
-Based on the answer:
+Then ask (clickable) how many people contribute at this scope:
 
-- Single person or single team → recommend Option C (single repo, folders by type)
-- Multiple roles with distinct governance → recommend Option A (per-role repos or directories)
-- Multiple roles with shared domain ownership → recommend Option B (per-domain)
+Options:
 
-Explain your recommendation briefly and ask if they agree or want a different structure.
+1. 1–5 (solo or small team).
+2. 5–50 (mid-sized team, small domain, or small org).
+3. 50+ (domain, large team, division, or org).
 
-Then, for any named role that matches one of the persona authorship guides, point them at the corresponding file as onboarding for whoever will write records in that role:
+---
+
+### Question 3: Memory bank location
+
+(Clickable.) "Where will the memory bank live?"
+
+Options:
+
+1. **Colocated**: inside the same repo as the code (works when the bank's scope matches one repo, e.g., a project-scoped bank inside a project repo).
+2. **Separate repo, cloned locally**: memory bank is its own repo, cloned alongside the code repo(s) it serves.
+3. **Separate repo, accessed remotely via `gh`**: memory bank lives in a GitHub repo; agents fetch content via `gh` CLI without a local clone.
+4. **Symlinked**: memory bank lives elsewhere on the filesystem and is reached via a symlink inside the code repo.
+5. **Other**: I'll describe.
+
+For bank scopes broader than a single repo (team, domain, org), a separate-repo option is usually the right fit. Colocation makes the bank feel like "this project's notes," which reinforces the fragmentation problem Q1 tries to avoid.
+
+---
+
+### Question 4: Directory name
+
+(Clickable.) "What should the memory bank directory be called?"
+
+Options:
+
+1. `memory-bank/` (default; conventional).
+2. Custom (I'll tell you the name).
+
+If custom, ask freeform: "What name?"
+
+---
+
+### Question 5: Roles and organization
+
+(Clickable.) "Who will author records across the scope you named?"
+
+Options:
+
+1. Just me (solo contributor).
+2. A single team (one shared governance).
+3. Multiple roles with **distinct** governance (e.g., architects, PMs, developers, support; each owns their own records).
+4. Multiple roles with **shared** ownership of domains or areas.
+
+Based on the answer, recommend a physical organization (independent of scope; any of these can work at any scope):
+
+- 1 or 2 → **Option C: single repo, folders by type** (`decisions/`, `rules/`, `exceptions/`, `context/`).
+- 3 → **Option A: per-role** (`architecture-memory-bank/`, `product-memory-bank/`, etc., each with record-type folders).
+- 4 → **Option B: per-domain** (`commerce-memory-bank/`, `platform-memory-bank/`, etc.).
+
+State the recommendation briefly and ask (clickable): "Go with the recommendation, or pick a different layout?"
+
+Options:
+
+1. Go with the recommendation.
+2. Option A (per-role).
+3. Option B (per-domain).
+4. Option C (single repo, folders by type).
+
+Then, for any named role that matches a persona hydration guide, point the user at the corresponding file:
 
 - Architects → `guide/by-persona/architects.md`
 - Product managers / product owners → `guide/by-persona/pms.md`
 - Developers → `guide/by-persona/developers.md`
 
-If the team has a role that doesn't match an existing persona guide, that's fine — the base schema applies to every role. They'll work from the spec files directly.
+Roles without a matching persona guide work from the spec files directly; the base schema applies to every role.
 
 ---
 
-### Question 3: Exception tracking
+### Question 6: Exception tracking
 
-"Do you want to track exceptions as first-class records? Exceptions capture sanctioned deviations from your rules — 'we broke the rule intentionally, here's why, here's who approved it.'
+(Clickable.) "Do you want to track exceptions as first-class records? Exceptions capture sanctioned deviations from rules: 'we broke the rule intentionally, here's why, here's who approved it.'
 
-I strongly recommend YES. Teams that skip exception tracking accumulate invisible holes in their standards — informal permissions that live in Slack threads, can't be audited, and silently erode governance over time. Exception records force time-bounded, scoped, reviewable deviations instead of permanent shadow rules.
+I strongly recommend YES. Teams that skip exception tracking accumulate invisible holes in their standards: informal permissions that live in Slack threads, can't be audited, and silently erode governance over time. The one case where it might be reasonable to skip: you're a solo developer with no standing rules yet."
 
-The only case where you might skip this: you're a solo developer with no standing rules to deviate from yet. Even then, you'll likely want it once you have PolicyRules.
+Options:
 
-Track exceptions? (yes/no)"
+1. Yes (recommended).
+2. No (I don't have rules yet, or I'll fold exceptions into Decisions).
 
 Based on answer:
 
-- Yes → scaffold 4 directories (decisions/, rules/, exceptions/, context/)
-- No → scaffold 3 directories (decisions/, rules/, context/) and add a note that exceptions fold into Decision records
+- Yes → scaffold 4 record directories (decisions/, rules/, exceptions/, context/) and include Exception content in the instructions file.
+- No → scaffold 3 record directories (decisions/, rules/, context/) and remove Exception content from the instructions file.
 
 ---
 
-### Question 4: Agent integration
+### Question 7: Scope vocabulary (optional)
 
-"Which AI coding assistant(s) will consume this memory bank? This determines what instructions file to generate.
+(Clickable.) "Do you want to capture the canonical scope vocabulary for this bank now? This is the list of terms used to scope records: service names, domain names, customer segments, system IDs. Seeding it helps agents match queries to records from day one. Skipping is fine; you can always add it later.
 
-Common options:
+If the bank spans multiple teams, the vocabulary should cover the full scope, not just one team's terms. Agents filtering on one team's terminology miss records tagged with another's. Agree on shared vocabulary across contributors before populating the bank."
 
-- Claude Code (uses CLAUDE.md)
-- GitHub Copilot (uses .github/copilot-instructions.md)
-- Cursor (uses .cursorrules)
-- Other / multiple
-- Not sure yet (I'll generate a generic instructions file you can adapt)"
+Options:
+
+1. Skip for now.
+2. Capture now.
+
+If option 2, ask freeform: "List 3–10 canonical scope terms for the full bank (comma-separated is fine). Examples: service names like `order-service`, domain names like `commerce`, segments like `tier-1`, system IDs like `plant-03`."
+
+---
+
+### Question 8: Agent integration
+
+(Clickable.) "Which AI coding assistant will primarily consume this memory bank? This determines the name and location of the generated instructions file."
+
+Options:
+
+1. GitHub Copilot (deploys to `.github/copilot-instructions.md`).
+2. Claude Code (deploys to `CLAUDE.md`).
+3. Cursor (deploys to `.cursorrules`).
+4. Other / multiple (I'll deploy to `.github/copilot-instructions.md` as a starting point; you adapt).
+5. Not sure yet (I'll generate a generic version you can adapt).
 
 ---
 
 ### Now scaffold the memory bank.
 
-Based on the answers, create the following:
+Using the answers above, create the following.
 
 #### 1. Directory structure
 
-Create the appropriate directories based on Question 2 and 3 answers. For a typical single-team setup with exception tracking:
-```
+Create directories in the target repo (or separate memory bank repo per Q3) based on Q4 (directory name), Q5 (organization), and Q6 (exception tracking). A typical single-team colocated setup with exception tracking produces:
 
+```
 memory-bank/
 ├── decisions/
 ├── rules/
 ├── exceptions/
 ├── context/
 └── .gitkeep (in each empty record directory)
+```
 
-# Step 2 (templates) adds:
-
-memory-bank/\_templates/
-├── decision.md
-├── policy-rule.md
-├── exception.md
-└── context.md
-
-# Step 3 (agent integration) writes an agent instructions file
-
-# based on Q4 (e.g., .github/copilot-instructions.md for GitHub Copilot),
-
-# typically at the root of the code repo (not inside memory-bank/).
-
-````
+Step 2 below adds `_templates/` alongside the record directories. Step 3 deploys an agent instructions file at the location determined by Q8 (typically at the root of the code repo, not inside `memory-bank/`).
 
 #### 2. Template files
 
-Create one template file per type in a `_templates/` directory:
+Create one template file per type in a `_templates/` directory inside the memory bank. Skip `exception.md` if Q6 is no.
 
 **`_templates/decision.md`**
+
 ```yaml
 ---
 id: <namespace>-ADR-<number>
@@ -161,7 +255,7 @@ approved_by: []
 ## Consequences
 
 <positive, negative, neutral>
-````
+```
 
 **`_templates/policy-rule.md`**
 
@@ -209,7 +303,7 @@ review_cadence: annual
 <how this is actually enforced>
 ```
 
-**`_templates/exception.md`** (if exception tracking is enabled)
+**`_templates/exception.md`** (skip if Q6 is no)
 
 ```yaml
 ---
@@ -244,7 +338,7 @@ scope_boundary: ""
 
 ## Justification
 
-<what prevents compliance, why constraint exists, what mitigates risk>
+<what prevents compliance, why the constraint exists, what mitigates risk>
 
 ## Compensating controls
 
@@ -304,70 +398,66 @@ constraints: []
 <what this means for work in scope>
 ```
 
-### 3. Agent Instructions File
+#### 3. Agent Instructions File
 
-Based on Question 4, customize and deploy the memory bank starter as the team's instructions file.
+Based on Q8, customize and deploy the memory bank starter as the team's instructions file.
 
-**Starter:** `memory-bank/copilot-instructions.starter.md` (in this reference repo). Do not deploy as-is; it contains `<!-- SCAFFOLD:TOKEN -->` markers flagging spots that vary by team.
+**Starter:** `memory-bank/copilot-instructions.starter.md` (in this reference repo). Do not deploy as-is; it contains `<!-- SCAFFOLD:TOKEN -->` markers flagging spots that vary by bank.
 
-**Deployment target (based on Q4):**
+**Deployment target (based on Q8):**
 
-- GitHub Copilot: `.github/copilot-instructions.md` in the code repo
-- Claude Code: `CLAUDE.md` in the code repo root
-- Cursor: `.cursorrules` in the code repo root
-- Other / not sure: start from `.github/copilot-instructions.md`; user adapts for their tool
+- GitHub Copilot → `.github/copilot-instructions.md` in the code repo
+- Claude Code → `CLAUDE.md` in the code repo root
+- Cursor → `.cursorrules` in the code repo root
+- Other / not sure → start from `.github/copilot-instructions.md`; user adapts for their tool
 
-**Replacement guide.** For each marker in the starter, apply the replacement rule below based on the Q answers above, then strip the marker comment. After all markers are resolved, strip the top-of-file starter banner too. The deployed file should be clean operational content (the agent reads it every session; every line should earn its keep).
+**Replacement guide.** For each marker in the starter, apply the rule below based on Q answers, then strip the marker comment. After all markers are resolved, strip the top-of-file starter banner too. The deployed file should be clean operational content; the agent reads it every session, so every line should earn its keep.
 
-| Marker                               | Replacement rule                                                                                                                                                                                                                                                                                                                                             |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `SCAFFOLD:RECORDS-LAYOUT-START/END`  | Rewrite the wrapped record-directory list to match Q2 (physical organization: per-type, per-role, per-domain) and the memory bank's location/naming. Default assumes colocated `memory-bank/` with per-type subdirs. Adjust paths if the memory bank lives elsewhere (separate repo local, separate repo remote via `gh`, symlinked, custom directory name). |
-| `SCAFFOLD:EXCEPTION-START/END`       | Keep the wrapped content if Q3 answered yes to exception tracking. Remove the wrapped content if no. Multiple pairs throughout the file; apply consistently.                                                                                                                                                                                                 |
-| `SCAFFOLD:SCOPE-VOCABULARY-HOOK`     | If Q2.5 captured team scope vocabulary (service names, domain names, segments, system IDs), insert a new `## Scope Vocabulary` section at the hook listing those terms. Otherwise, remove the marker and do not insert anything.                                                                                                                             |
-| `SCAFFOLD:PERSONA-GUIDES-START/END`  | Keep only the persona links for roles captured in Q2. Adjust path prefixes if the memory bank lives somewhere other than `memory-bank/` in the target repo.                                                                                                                                                                                                  |
-| `SCAFFOLD:GUIDE-PATH/TEMPLATES-PATH` | Adjust path prefixes alongside `RECORDS-LAYOUT` based on memory bank location. If templates aren't created (Q3 no OR user opts out), remove the `TEMPLATES-PATH`-wrapped sentence.                                                                                                                                                                           |
+| Marker                               | Replacement rule                                                                                                                                                                                                                                                                                                                                                                |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SCAFFOLD:RECORDS-LAYOUT-START/END`  | Rewrite the wrapped record-directory list to match Q5 (physical organization), Q3 (memory bank location), and Q4 (directory name). Default assumes colocated `memory-bank/` with per-type subdirs. Adjust paths if the memory bank lives elsewhere (separate repo local, separate repo remote via `gh`, symlinked, custom directory name) or uses per-role / per-domain layout. |
+| `SCAFFOLD:EXCEPTION-START/END`       | Keep the wrapped content if Q6 answered yes. Remove the wrapped content if no. Multiple pairs throughout the file; apply consistently.                                                                                                                                                                                                                                          |
+| `SCAFFOLD:SCOPE-VOCABULARY-HOOK`     | If Q7 captured scope vocabulary, insert a new `## Scope Vocabulary` section at the hook listing those terms. Otherwise, remove the marker without inserting anything.                                                                                                                                                                                                           |
+| `SCAFFOLD:PERSONA-GUIDES-START/END`  | Keep only the persona links for roles captured in Q5. Adjust path prefixes if the memory bank lives somewhere other than `memory-bank/` in the target repo.                                                                                                                                                                                                                     |
+| `SCAFFOLD:GUIDE-PATH/TEMPLATES-PATH` | Adjust path prefixes alongside `RECORDS-LAYOUT` based on memory bank location. If templates aren't created, remove the `TEMPLATES-PATH`-wrapped sentence.                                                                                                                                                                                                                       |
 
 After replacements, every `<!-- SCAFFOLD:... -->` comment should be gone. Write the result to the deployment target chosen above.
 
-### 4. Namespace Convention
+#### 4. Namespace convention
 
-Ask: "What namespace prefix should your records use? This appears in IDs like `<namespace>-ADR-0001`. Common choices: project name, team name, or domain name. (e.g., 'commerce', 'platform', 'myapp')"
+(Clickable.) "What namespace prefix should your records use? Appears in IDs like `<namespace>-ADR-0001`."
 
-Use their answer to pre-fill the templates.
+Options:
 
-### 5. Seed Records (optional)
+1. Project name (e.g., `commerce`).
+2. Team name (e.g., `platform-team`).
+3. Domain name (e.g., `fulfillment`).
+4. Short custom string (I'll provide).
 
-Ask: "Would you like me to help you write your first few records? Good starting points:
+If custom, ask freeform: "What namespace?"
 
-- A Decision you've made recently that someone might ask about later
-- A rule your team follows (even informal ones count)
-- An environmental fact that shapes your work
+Pick a namespace that matches the bank's scope (Q1). A domain-scoped bank with a project-name namespace will confuse future authors about what the bank actually covers.
 
-Want to seed one or two records now, or start with empty templates?"
+Use the answer to pre-fill the templates.
 
-If yes, walk them through writing 1-2 records using the templates, filling in real content from their answers. If the user's role matches a persona hydration guide in `guide/by-persona/`, read that guide first and use its field-fill cheat sheet and worked examples to shape how you phrase each field. The templates give the structure; the persona guide gives the voice.
+#### 5. Seed records (optional)
+
+(Clickable.) "Want to write 1–2 starter records now, or start with empty templates?"
+
+Options:
+
+1. Write 1–2 seed records now (I'll walk you through).
+2. Start with empty templates; I'll write my own later.
+
+If option 1, walk through 1–2 records using the templates, filling in real content from the user's answers. If the user's role matches a persona hydration guide in `guide/by-persona/`, read that guide first and use its field-fill cheat sheet and worked examples to shape phrasing. Templates give the structure; the persona guide gives the voice.
 
 ---
 
-## After Scaffolding, Summarize What Was Created:
+### After scaffolding, summarize what was created
 
-- List all directories and files created
-- Remind them of the four-stage retrieval funnel
-- Point them to the model docs for deeper reference
-- Suggest their next step: "Write your first real record. Start with a Decision — they're the most familiar and immediately valuable."
-
-```
-
----
-
-## Using This Prompt
-
-1. Clone or download this repo
-2. Open a conversation with your AI coding assistant
-3. Make sure the agent can read the model files (this repo)
-4. Paste the prompt above (everything between the triple-backtick code fences)
-5. Answer the questions as they come
-6. Review what was scaffolded and start writing records
-
-The scaffold creates the structure and templates. The model docs (the numbered files in this repo) are the reference for how to fill them in well.
-```
+- List all directories and files created.
+- Remind the user of the four-stage retrieval funnel.
+- Point them at `model/` docs for deeper reference and `guide/` for hydration practice.
+- Remind them of the scope they chose (Q1) and the governance implications; if scope is broad, suggest a brief conversation with contributors about how records get proposed and accepted across teams.
+- Suggest the next step: "Write your first real record. Start with a Decision; they're the most familiar and immediately valuable."
+````

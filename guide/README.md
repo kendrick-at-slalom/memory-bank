@@ -80,15 +80,18 @@ If you use Copilot Spaces[^copilot-spaces], the Space scoping works alongside `c
 
 ## Physical Organization
 
-Before you write records, pick how your memory bank is organized. The structure determines where files live, which is the first-level retrieval filter.
+Two questions shape the physical layout:
 
-| Option               | Structure                                                 | Best for                                                |
-| -------------------- | --------------------------------------------------------- | ------------------------------------------------------- |
-| A: Per-role/function | `architecture-memory-bank/`, `product-memory-bank/`, etc. | Federated teams, distinct governance per role           |
-| B: Per-domain        | `commerce-memory-bank/`, `platform-memory-bank/`, etc.    | Strong domain ownership, cross-functional collaboration |
-| C: Single repo       | `memory-bank/decisions/`, `memory-bank/context/`, etc.    | Small teams, single products, individual use            |
+1. **What scope does this bank serve?** A single project, a team, a domain, an org, or something broader. Broader scope reduces fragmentation and makes cross-cutting knowledge findable. Narrow enough to match your governance boundary is the target; don't pick narrower than necessary. Per-project banks are the most common default and often the wrong one; many teams discover later that a team- or domain-scoped bank would have served them better.
+2. **Within that scope, how are records organized?** Three patterns:
 
-The [scaffold prompt](../SCAFFOLD.md) helps you choose based on your situation.
+| Option                          | Structure                                                                         | Best for                                       |
+| ------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------- |
+| A: Per-role                     | Multiple `memory-bank/`-style repos, one per role                                 | Broader scopes with distinct role governance   |
+| B: Per-domain                   | Multiple `memory-bank/`-style repos, one per domain                               | Cross-team scopes with strong domain ownership |
+| C: Single repo, folders by type | One `memory-bank/` with folders `decisions/`, `rules/`, `exceptions/`, `context/` | Project, team, or small-domain scope           |
+
+The [scaffold prompt](../SCAFFOLD.md) walks you through both questions.
 
 ## Writing Your First Record
 
