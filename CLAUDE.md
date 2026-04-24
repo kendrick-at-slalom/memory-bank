@@ -8,26 +8,28 @@
 
 ```
 ./
-├── CLAUDE.md          # this file
-├── README.md          # human-facing overview (start here for orientation)
-├── SCAFFOLD.md        # executable prompt for setting up a memory bank
-├── model/             # the full specification
-│   ├── README.md               # condensed overview of the model, points into the spec files
-│   ├── 00-retrieval-model.md   # WHY the schema is shaped this way
+├── CLAUDE.md                    # this file
+├── README.md                    # human-facing overview (start here for orientation)
+├── SCAFFOLD.md                  # executable prompt for setting up a memory bank
+├── copilot-instructions.starter.md  # template; SCAFFOLD processes and deploys to `.github/copilot-instructions.md`
+├── model/                       # the full specification
+│   ├── README.md                # condensed overview of the model, points into the spec files
+│   ├── 00-retrieval-model.md    # WHY the schema is shaped this way
 │   ├── 01-base-memory-record.md # shared schema all types extend
-│   ├── 02-decision.md          # Decision type
-│   ├── 03-policy-rule.md       # PolicyRule type
-│   ├── 04-exception.md         # Exception type
-│   ├── 05-context.md           # Context type
-│   └── 06-relationships.md     # how records link to each other
-├── guide/             # practitioner-facing hydration guidance
-│   ├── README.md               # what a memory bank is, how to write your first record
-│   ├── retrieval.md            # how agents find records; role-specific query patterns
-│   └── by-persona/             # role-specific hydration (triggers, cheat sheets, worked examples)
+│   ├── 02-decision.md           # Decision type
+│   ├── 03-policy-rule.md        # PolicyRule type
+│   ├── 04-exception.md          # Exception type
+│   ├── 05-context.md            # Context type
+│   └── 06-relationships.md      # how records link to each other
+├── guide/                       # practitioner-facing hydration guidance
+│   ├── README.md                # what a memory bank is, how to write your first record
+│   ├── retrieval.md             # how agents find records; role-specific query patterns
+│   ├── leading-practices.md     # cross-cutting discipline: frontmatter, lifecycle, verification
+│   └── by-persona/              # role-specific hydration (triggers, cheat sheets, worked examples)
 │       ├── architects.md
 │       ├── pms.md
 │       └── developers.md
-└── examples/          # sample records across all four types
+└── examples/                    # sample records across all four types
 ```
 
 **Reading order matters.** `00-retrieval-model.md` first: it explains the design forces that shaped everything else. Then `01-base-memory-record.md` for the shared schema. Type-specific files and relationships after that.

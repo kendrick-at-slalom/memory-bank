@@ -1,17 +1,26 @@
+<!-- This file is a starter template for a memory-bank-aware `copilot-instructions.md`. Do not deploy as-is. See `SCAFFOLD.md` § "Agent Instructions File" for the replacement guide and deployment steps. -->
+
 # Memory Bank Instructions
 
 This repository uses a memory bank: a governed knowledge layer of decisions, rules, exceptions, and environmental facts. When working in this repo, consult the memory bank before inferring intent from code.
 
 ## Repository Structure
 
+<!-- SCAFFOLD:RECORDS-LAYOUT-START -->
+
 The memory bank lives under `memory-bank/` with records organized by type:
 
 - `memory-bank/decisions/`: Decision records. Choices made, with alternatives considered.
 - `memory-bank/rules/`: PolicyRule records. Standing guidance that should govern generated code.
+<!-- SCAFFOLD:EXCEPTION-START -->
 - `memory-bank/exceptions/`: Exception records. Sanctioned deviations from PolicyRules.
+<!-- SCAFFOLD:EXCEPTION-END -->
 - `memory-bank/context/`: Context records. Environmental facts others depend on.
+<!-- SCAFFOLD:RECORDS-LAYOUT-END -->
 
 Each record is a Markdown file with YAML frontmatter at the top. The frontmatter is authoritative for retrieval; the body is human context.
+
+<!-- SCAFFOLD:SCOPE-VOCABULARY-HOOK -->
 
 ## Finding Relevant Records
 
@@ -28,10 +37,12 @@ Do not read every record in full to find matches. If you catch yourself doing th
 
 - **Decision.** A retrospective choice. Explains why things are the way they are. When generating code inside a Decision's `applies_to` scope, respect the chosen approach unless the user explicitly overrides.
 - **PolicyRule.** Prospective guidance. The `enforcement` field determines how strictly to treat it:
-  - `required`: hard constraint. Do not generate code that violates it without an Exception record covering the scope.
+  - `required`: hard constraint. Do not generate code that violates it<!-- SCAFFOLD:EXCEPTION-START --> without an Exception record covering the scope<!-- SCAFFOLD:EXCEPTION-END -->.
   - `recommended`: expected default. Flag or document deviations.
   - `advisory`: surface as context; do not block on it.
+  <!-- SCAFFOLD:EXCEPTION-START -->
 - **Exception.** A sanctioned carve-out from a PolicyRule. If an Exception's `applies_to` matches your scope and its `exception_to` points at a PolicyRule in scope, the Exception governs inside its `scope_boundary`.
+<!-- SCAFFOLD:EXCEPTION-END -->
 - **Context.** An environmental fact. Reason over it; do not contradict it. The `constraints` field describes implications for downstream work.
 
 ## Status and Supersession
@@ -57,22 +68,13 @@ Supersession is a two-record operation: the old record gets `status: superseded`
 
 If the user is writing a memory bank record, point them at the role-specific guide:
 
+<!-- SCAFFOLD:PERSONA-GUIDES-START -->
+
 - Architects: `memory-bank/guide/by-persona/architects.md`
 - PMs / Product Owners: `memory-bank/guide/by-persona/pms.md`
 - Developers: `memory-bank/guide/by-persona/developers.md`
+<!-- SCAFFOLD:PERSONA-GUIDES-END -->
 
-For cross-cutting habits (frontmatter discipline, lifecycle, verification), see `memory-bank/guide/leading-practices.md`.
+For cross-cutting habits (frontmatter discipline, lifecycle, verification), see <!-- SCAFFOLD:GUIDE-PATH -->`memory-bank/guide/leading-practices.md`<!-- SCAFFOLD:GUIDE-PATH-END -->.
 
-If the memory bank includes templates at `memory-bank/_templates/{type}.md`, start the new record from the matching template; templates encode required fields and structure.
-
----
-
-## Customizing This File
-
-This is a generic starter. Before deploying it as `.github/copilot-instructions.md` in your repo, adjust:
-
-- **Directory paths.** The paths above assume the default scaffold layout (`memory-bank/decisions/`, `memory-bank/rules/`, and so on). Change them if your team uses per-role or per-domain organization.
-- **Exception tracking.** If your team does not track Exceptions as a separate type, remove Exception references.
-- **Scope vocabulary.** If your team scopes records with specific vocabulary (service names, domain names, customer segments, system IDs), add a short section naming that vocabulary so the agent can match queries to records.
-- **Role coverage.** Remove persona-guide links for roles your team does not have.
-- **Extensions.** Add team-specific guidance as needed: preferred tools, naming conventions, additional anti-patterns to avoid.
+<!-- SCAFFOLD:TEMPLATES-PATH -->If the memory bank includes templates at `memory-bank/_templates/{type}.md`, start the new record from the matching template; templates encode required fields and structure.

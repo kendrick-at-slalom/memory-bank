@@ -74,7 +74,7 @@ Structured frontmatter determines whether Copilot can find your record. The body
 
 A `.github/copilot-instructions.md` file[^copilot-instructions] in your repo tells Copilot how to work with your memory bank. IDE Copilot, Copilot CLI, and the Copilot coding agent all read it automatically. You configure once; all surfaces pick it up.
 
-A starter template is available at [`copilot-instructions.md`](../copilot-instructions.md) in the repo root. Copy it into your memory bank repo's `.github/` directory and adjust the values for your team.
+A starter template is available at [`copilot-instructions.starter.md`](../copilot-instructions.starter.md) in the repo root. The starter contains `<!-- SCAFFOLD:... -->` markers flagging spots that vary by team; run [`SCAFFOLD.md`](../SCAFFOLD.md) to customize and deploy the result to `.github/copilot-instructions.md` in your code repo, or consult SCAFFOLD.md's § "Agent Instructions File" for the replacement guide to do it manually.
 
 If you use Copilot Spaces[^copilot-spaces], the Space scoping works alongside `copilot-instructions.md` — the instructions tell Copilot _how_ to use the memory bank, the Space tells it _which repos to look in_.
 

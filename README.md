@@ -12,11 +12,12 @@ The model is deliberately lean; required fields are the smallest set that makes 
 
 ```
 ./
-├── README.md          # this file
-├── CLAUDE.md          # agent instructions for working in this repo
-├── SCAFFOLD.md        # executable prompt for setting up a memory bank
-├── model/             # the full architecture specification
-│   ├── README.md      # architecture overview — types, retrieval, relationships, examples
+├── README.md                  # this file
+├── CLAUDE.md                  # agent instructions for working in this repo
+├── SCAFFOLD.md                # executable prompt for setting up a memory bank
+├── copilot-instructions.starter.md    # template; SCAFFOLD customizes and deploys to `.github/copilot-instructions.md` in adopting repos
+├── model/                     # the full architecture specification
+│   ├── README.md              # architecture overview: types, retrieval, relationships, examples
 │   ├── 00-retrieval-model.md
 │   ├── 01-base-memory-record.md
 │   ├── 02-decision.md
@@ -24,10 +25,12 @@ The model is deliberately lean; required fields are the smallest set that makes 
 │   ├── 04-exception.md
 │   ├── 05-context.md
 │   └── 06-relationships.md
-└── guide/             # practitioner-facing hydration guide
-    ├── README.md      # what a memory bank is, how to get started
-    ├── retrieval.md   # how Copilot finds records, the retrieval funnel
-    └── by-persona/    # role-specific hydration guides (architects, PMs, developers): triggers, cheat sheets, worked examples
+├── guide/                     # practitioner-facing hydration guide
+│   ├── README.md              # what a memory bank is, how to get started
+│   ├── retrieval.md           # how Copilot finds records, the retrieval funnel
+│   ├── leading-practices.md   # cross-cutting discipline: frontmatter, lifecycle, verification
+│   └── by-persona/            # role-specific hydration guides (architects, PMs, developers)
+└── examples/                  # sample records across all four types
 ```
 
 ## Getting Started

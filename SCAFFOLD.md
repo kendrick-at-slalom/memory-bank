@@ -94,16 +94,25 @@ Create the appropriate directories based on Question 2 and 3 answers. For a typi
 ```
 
 memory-bank/
-
 ├── decisions/
-
 ├── rules/
-
 ├── exceptions/
-
 ├── context/
+└── .gitkeep (in each empty record directory)
 
-└── .gitkeep (in each empty directory)
+# Step 2 (templates) adds:
+
+memory-bank/\_templates/
+├── decision.md
+├── policy-rule.md
+├── exception.md
+└── context.md
+
+# Step 3 (agent integration) writes an agent instructions file
+
+# based on Q4 (e.g., .github/copilot-instructions.md for GitHub Copilot),
+
+# typically at the root of the code repo (not inside memory-bank/).
 
 ````
 
@@ -297,49 +306,28 @@ constraints: []
 
 ### 3. Agent Instructions File
 
-Based on Question 4, generate the appropriate instructions file. Here's the content to adapt per tool:
+Based on Question 4, customize and deploy the memory bank starter as the team's instructions file.
 
-```markdown
-# Memory Bank Instructions
+**Starter:** `memory-bank/copilot-instructions.starter.md` (in this reference repo). Do not deploy as-is; it contains `<!-- SCAFFOLD:TOKEN -->` markers flagging spots that vary by team.
 
-This project maintains a memory bank — structured knowledge records that you should consult when answering questions or generating code.
+**Deployment target (based on Q4):**
 
-## When to consult the memory bank
+- GitHub Copilot: `.github/copilot-instructions.md` in the code repo
+- Claude Code: `CLAUDE.md` in the code repo root
+- Cursor: `.cursorrules` in the code repo root
+- Other / not sure: start from `.github/copilot-instructions.md`; user adapts for their tool
 
-- Before suggesting architectural approaches → check decisions/ and rules/
-- Before generating code that touches shared services → check rules/ and exceptions/
-- When asked "why is it built this way?" → check decisions/
-- When asked "what's the situation with X?" → check context/
-- When reviewing code → check rules/ for violations, exceptions/ for sanctioned deviations
+**Replacement guide.** For each marker in the starter, apply the replacement rule below based on the Q answers above, then strip the marker comment. After all markers are resolved, strip the top-of-file starter banner too. The deployed file should be clean operational content (the agent reads it every session; every line should earn its keep).
 
-## How to query (four-stage funnel)
+| Marker                               | Replacement rule                                                                                                                                                                                                                                                                                                                                             |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `SCAFFOLD:RECORDS-LAYOUT-START/END`  | Rewrite the wrapped record-directory list to match Q2 (physical organization: per-type, per-role, per-domain) and the memory bank's location/naming. Default assumes colocated `memory-bank/` with per-type subdirs. Adjust paths if the memory bank lives elsewhere (separate repo local, separate repo remote via `gh`, symlinked, custom directory name). |
+| `SCAFFOLD:EXCEPTION-START/END`       | Keep the wrapped content if Q3 answered yes to exception tracking. Remove the wrapped content if no. Multiple pairs throughout the file; apply consistently.                                                                                                                                                                                                 |
+| `SCAFFOLD:SCOPE-VOCABULARY-HOOK`     | If Q2.5 captured team scope vocabulary (service names, domain names, segments, system IDs), insert a new `## Scope Vocabulary` section at the hook listing those terms. Otherwise, remove the marker and do not insert anything.                                                                                                                             |
+| `SCAFFOLD:PERSONA-GUIDES-START/END`  | Keep only the persona links for roles captured in Q2. Adjust path prefixes if the memory bank lives somewhere other than `memory-bank/` in the target repo.                                                                                                                                                                                                  |
+| `SCAFFOLD:GUIDE-PATH/TEMPLATES-PATH` | Adjust path prefixes alongside `RECORDS-LAYOUT` based on memory bank location. If templates aren't created (Q3 no OR user opts out), remove the `TEMPLATES-PATH`-wrapped sentence.                                                                                                                                                                           |
 
-Always start cheap and narrow progressively:
-
-1. **Glob filenames** — `memory-bank/decisions/*kafka*` or `memory-bank/rules/*persist*`
-2. **Grep frontmatter** — `grep "applies_to:.*order-service" memory-bank/` or `grep "^status: accepted" memory-bank/decisions/`
-3. **Read frontmatter only** — first 15 lines of surviving candidates (~300 tokens each)
-4. **Read full body** — only the 3-5 records that actually matter
-
-Never read all records in full. The funnel exists to keep retrieval cheap.
-
-## When citing records
-
-Always cite the human-readable `id` field (e.g., commerce-ADR-0042) so readers can find the record.
-
-## Record lifecycle
-
-- `status: accepted` = current and authoritative
-- `status: proposed` = under discussion, not yet agreed
-- `status: superseded` = replaced, follow `superseded_by` link to current version
-- `status: deprecated` = no longer applies
-
-## PolicyRule enforcement tiers
-
-- `enforcement: required` = hard constraint, do not violate without an Exception in scope
-- `enforcement: recommended` = follow by default, user can override explicitly
-- `enforcement: advisory` = mention but don't block
-```
+After replacements, every `<!-- SCAFFOLD:... -->` comment should be gone. Write the result to the deployment target chosen above.
 
 ### 4. Namespace Convention
 
