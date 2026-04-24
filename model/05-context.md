@@ -191,21 +191,21 @@ Context is the type that most clearly benefits every role:
 
 All roles produce Context records with the same shape but different content. The table below shows how the fields fill for the three personas currently covered by authorship guides:
 
-| Field | Architect | PM / Product Owner | Developer |
-| --- | --- | --- | --- |
+| Field            | Architect                                                                                    | PM / Product Owner                                                                | Developer                                                                                         |
+| ---------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | `fact_statement` | "The order-service is the canonical source of truth for order state in the commerce domain." | "Enterprise accounts hold 99.95% uptime SLAs in their master service agreements." | "The fulfillment-service has a 200ms p99 latency spike during the nightly reconciliation window." |
-| `context_scope` | `domain` or `service` | `segment`, `product`, or `org` | `service` or `environment` |
-| `verifiability` | Domain model docs, deployment manifests, platform dashboards | Contract templates (legal), commit dashboards, CS records | Latency dashboards, logs, SLO definitions |
-| `constraints` | What downstream services should or shouldn't do given the fact | What product, engineering, or ops must respect given the fact | How callers should behave given the fact (timeouts, windows, SLO exclusions) |
-| `tags` | `source-of-truth`, `integration`, `migration-state` | `sla`, `commitment`, `tier`, `market` | `latency`, `performance`, `vendor`, `legacy` |
+| `context_scope`  | `domain` or `service`                                                                        | `segment`, `product`, or `org`                                                    | `service` or `environment`                                                                        |
+| `verifiability`  | Domain model docs, deployment manifests, platform dashboards                                 | Contract templates (legal), commit dashboards, CS records                         | Latency dashboards, logs, SLO definitions                                                         |
+| `constraints`    | What downstream services should or shouldn't do given the fact                               | What product, engineering, or ops must respect given the fact                     | How callers should behave given the fact (timeouts, windows, SLO exclusions)                      |
+| `tags`           | `source-of-truth`, `integration`, `migration-state`                                          | `sla`, `commitment`, `tier`, `market`                                             | `latency`, `performance`, `vendor`, `legacy`                                                      |
 
 The authorship trigger: you write a Context when you've learned or confirmed something about your environment that other people (or agents) will need to reason over, and that isn't already captured elsewhere. Not everything worth knowing is worth a record; the test is whether a future teammate or agent would benefit from finding it.
 
-For full worked examples in each voice — plus per-persona authorship triggers, common mistakes, and field-fill cheat sheets — see the per-persona guides:
+For full worked examples in each voice (plus per-persona authorship triggers, common mistakes, and field-fill cheat sheets), see the per-persona hydration guides:
 
-- [`by-persona/architect-authorship.md`](by-persona/architect-authorship.md)
-- [`by-persona/pm-authorship.md`](by-persona/pm-authorship.md)
-- [`by-persona/developer-authorship.md`](by-persona/developer-authorship.md)
+- [Architects](../guide/by-persona/architects.md)
+- [PMs / POs](../guide/by-persona/pms.md)
+- [Developers](../guide/by-persona/developers.md)
 
 PM commitments deserve a specific mention: promises made to customers or stakeholders are currently authored as Context records with a `commitment` tag. The open question in the model's roadmap is whether Commitment becomes its own type; until it does, use Context with the tag.
 

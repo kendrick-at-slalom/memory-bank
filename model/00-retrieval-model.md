@@ -261,7 +261,7 @@ Four stages, and only stage 4 is expensive.
 
 The retrieval model is role-neutral: the funnel doesn't care who asked. What changes by role is which filter fields matter most and which record types get retrieved. Three short vignettes to ground the abstraction:
 
-### Architect, reviewing an intake request
+### Architect, Reviewing an Intake Request
 
 An architect reads a new intake description and wants to know what constraints already apply to the scope before designing. The agent runs:
 
@@ -272,7 +272,7 @@ An architect reads a new intake description and wants to know what constraints a
 
 The filters that do the work: `memory_type`, `applies_to.services`, `applies_to.domains`. The architect is scanning for constraints to respect, not for commitments or gotchas.
 
-### Developer, before starting an implementation task
+### Developer, Before Starting an Implementation Task
 
 A developer has a story to build and wants to know what rules and decisions apply before writing code. The agent runs the same funnel:
 
@@ -283,7 +283,7 @@ A developer has a story to build and wants to know what rules and decisions appl
 
 The filters that do the work: `memory_type: PolicyRule` (to see what's imperative), `enforcement: required` (to see what's non-negotiable), `applies_to.services`. The developer's primary question is "what must I follow, and what should I know."
 
-### PM, deciding whether to accept an intake request
+### PM, Deciding Whether to Accept an Intake Request
 
 A PM is about to commit an intake request to the backlog and wants to know whether relevant decision context already exists. The agent runs:
 

@@ -12,12 +12,13 @@
 You are going to help me set up a memory bank for my project — a structured knowledge layer that AI coding assistants can query to find decisions, rules, exceptions, and environmental facts about our work.
 
 The memory bank model is documented in this repo. Before we begin, read the following files to understand the model:
+
 - README.md (overview)
 - model/README.md (condensed model overview with the authorship map)
 - model/00-retrieval-model.md (how agents find records — especially the four-stage funnel)
 - model/01-base-memory-record.md (shared schema)
 
-Also note that `model/by-persona/` contains authorship guides for architects, PMs, and developers — same schema, role-specific voice and worked examples. You don't need to read them yet; you'll point me at the right one once you know who will be writing records (Question 2).
+Also note that `guide/by-persona/` contains hydration guides for architects, PMs, and developers; same schema, role-specific voice and worked examples. You don't need to read them yet; you'll point me at the right one once you know who will be writing records (Question 2).
 
 Then ask me the following questions ONE AT A TIME, waiting for my answer before proceeding to the next. Use my answers to configure the scaffold.
 
@@ -34,6 +35,7 @@ Then ask me the following questions ONE AT A TIME, waiting for my answer before 
 "Who will write records in this memory bank? Is it just you, a single team, or multiple roles (e.g., architects, PMs, designers, developers, support)? This determines whether we organize by role, by domain, or as a single flat structure."
 
 Based on the answer:
+
 - Single person or single team → recommend Option C (single repo, folders by type)
 - Multiple roles with distinct governance → recommend Option A (per-role repos or directories)
 - Multiple roles with shared domain ownership → recommend Option B (per-domain)
@@ -41,9 +43,10 @@ Based on the answer:
 Explain your recommendation briefly and ask if they agree or want a different structure.
 
 Then, for any named role that matches one of the persona authorship guides, point them at the corresponding file as onboarding for whoever will write records in that role:
-- Architects → `model/by-persona/architect-authorship.md`
-- Product managers / product owners → `model/by-persona/pm-authorship.md`
-- Developers → `model/by-persona/developer-authorship.md`
+
+- Architects → `guide/by-persona/architects.md`
+- Product managers / product owners → `guide/by-persona/pms.md`
+- Developers → `guide/by-persona/developers.md`
 
 If the team has a role that doesn't match an existing persona guide, that's fine — the base schema applies to every role. They'll work from the spec files directly.
 
@@ -60,6 +63,7 @@ The only case where you might skip this: you're a solo developer with no standin
 Track exceptions? (yes/no)"
 
 Based on answer:
+
 - Yes → scaffold 4 directories (decisions/, rules/, exceptions/, context/)
 - No → scaffold 3 directories (decisions/, rules/, context/) and add a note that exceptions fold into Decision records
 
@@ -70,6 +74,7 @@ Based on answer:
 "Which AI coding assistant(s) will consume this memory bank? This determines what instructions file to generate.
 
 Common options:
+
 - Claude Code (uses CLAUDE.md)
 - GitHub Copilot (uses .github/copilot-instructions.md)
 - Cursor (uses .cursorrules)
@@ -85,15 +90,21 @@ Based on the answers, create the following:
 #### 1. Directory structure
 
 Create the appropriate directories based on Question 2 and 3 answers. For a typical single-team setup with exception tracking:
+```
 
-```
 memory-bank/
+
 ├── decisions/
+
 ├── rules/
+
 ├── exceptions/
+
 ├── context/
+
 └── .gitkeep (in each empty directory)
-```
+
+````
 
 #### 2. Template files
 
@@ -140,9 +151,10 @@ approved_by: []
 ## Consequences
 
 <positive, negative, neutral>
-```
+````
 
 **`_templates/policy-rule.md`**
+
 ```yaml
 ---
 id: <namespace>-POL-<number>
@@ -188,6 +200,7 @@ review_cadence: annual
 ```
 
 **`_templates/exception.md`** (if exception tracking is enabled)
+
 ```yaml
 ---
 id: <namespace>-EXC-<number>
@@ -237,6 +250,7 @@ scope_boundary: ""
 ```
 
 **`_templates/context.md`**
+
 ```yaml
 ---
 id: <namespace>-CTX-<number>
@@ -280,7 +294,7 @@ constraints: []
 <what this means for work in scope>
 ```
 
-#### 3. Agent instructions file
+### 3. Agent Instructions File
 
 Based on Question 4, generate the appropriate instructions file. Here's the content to adapt per tool:
 
@@ -326,13 +340,13 @@ Always cite the human-readable `id` field (e.g., commerce-ADR-0042) so readers c
 - `enforcement: advisory` = mention but don't block
 ```
 
-#### 4. Namespace convention
+### 4. Namespace Convention
 
 Ask: "What namespace prefix should your records use? This appears in IDs like `<namespace>-ADR-0001`. Common choices: project name, team name, or domain name. (e.g., 'commerce', 'platform', 'myapp')"
 
 Use their answer to pre-fill the templates.
 
-#### 5. Seed records (optional)
+### 5. Seed Records (optional)
 
 Ask: "Would you like me to help you write your first few records? Good starting points:
 
@@ -342,16 +356,17 @@ Ask: "Would you like me to help you write your first few records? Good starting 
 
 Want to seed one or two records now, or start with empty templates?"
 
-If yes, walk them through writing 1-2 records using the templates, filling in real content from their answers. If the user's role matches a persona authorship guide in `model/by-persona/`, read that guide first and use its field-fill cheat sheet and worked examples to shape how you phrase each field — the templates give the structure, the persona guide gives the voice.
+If yes, walk them through writing 1-2 records using the templates, filling in real content from their answers. If the user's role matches a persona hydration guide in `guide/by-persona/`, read that guide first and use its field-fill cheat sheet and worked examples to shape how you phrase each field. The templates give the structure; the persona guide gives the voice.
 
 ---
 
-### After scaffolding, summarize what was created:
+## After Scaffolding, Summarize What Was Created:
 
 - List all directories and files created
 - Remind them of the four-stage retrieval funnel
 - Point them to the model docs for deeper reference
 - Suggest their next step: "Write your first real record. Start with a Decision — they're the most familiar and immediately valuable."
+
 ```
 
 ---
@@ -366,3 +381,4 @@ If yes, walk them through writing 1-2 records using the templates, filling in re
 6. Review what was scaffolded and start writing records
 
 The scaffold creates the structure and templates. The model docs (the numbered files in this repo) are the reference for how to fill them in well.
+```

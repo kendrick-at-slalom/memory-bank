@@ -24,21 +24,21 @@ Decisions are the highest-value type for agent-assisted work. When a developer a
 
 Decision maps onto the ADR for architects, but the same schema carries a prioritization call for a PM and an implementation-pattern choice for a developer. Same fields, different content.
 
-| Field | Architect | PM / Product Owner | Developer |
-| --- | --- | --- | --- |
-| `decision_question` | "Should the order domain use event sourcing or traditional CRUD?" | "Should feature X launch to tier-2 in Q2 or Q3?" | "Which HTTP client library for the fulfillment-service?" |
-| `decision_outcome` | "Event sourcing using Kafka." | "Hold tier-2 rollout until Q3." | "reqwest with retry-backoff middleware." |
-| `alternatives_considered` | Technical alternatives with rejection reasons | Scope / timing / market alternatives | Other libraries or patterns with practical trade-offs |
-| `decision_drivers` | Audit requirements, platform capabilities, prior Decisions, PolicyRules you inherit | Customer commitments, engineering capacity, market timing, Contexts about the segment | Existing infra, team skills, PolicyRules for the stack, performance needs |
-| `applies_to` | Services, domains, systems | Segments, products, markets, customer tiers | Services, modules, environments |
+| Field                     | Architect                                                                           | PM / Product Owner                                                                    | Developer                                                                 |
+| ------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `decision_question`       | "Should the order domain use event sourcing or traditional CRUD?"                   | "Should feature X launch to tier-2 in Q2 or Q3?"                                      | "Which HTTP client library for the fulfillment-service?"                  |
+| `decision_outcome`        | "Event sourcing using Kafka."                                                       | "Hold tier-2 rollout until Q3."                                                       | "reqwest with retry-backoff middleware."                                  |
+| `alternatives_considered` | Technical alternatives with rejection reasons                                       | Scope / timing / market alternatives                                                  | Other libraries or patterns with practical trade-offs                     |
+| `decision_drivers`        | Audit requirements, platform capabilities, prior Decisions, PolicyRules you inherit | Customer commitments, engineering capacity, market timing, Contexts about the segment | Existing infra, team skills, PolicyRules for the stack, performance needs |
+| `applies_to`              | Services, domains, systems                                                          | Segments, products, markets, customer tiers                                           | Services, modules, environments                                           |
 
 The authorship trigger is also different: architects write a Decision when they make an architectural choice under constraints, PMs when they make a prioritization or scope call, developers when they make an implementation choice with reach beyond one file.
 
-For full worked examples in each voice — plus authorship triggers, common mistakes, and field-fill cheat sheets — see the per-persona guides:
+For full worked examples in each voice (plus authorship triggers, common mistakes, and field-fill cheat sheets), see the per-persona hydration guides:
 
-- [`by-persona/architect-authorship.md`](by-persona/architect-authorship.md)
-- [`by-persona/pm-authorship.md`](by-persona/pm-authorship.md)
-- [`by-persona/developer-authorship.md`](by-persona/developer-authorship.md)
+- [Architects](../guide/by-persona/architects.md)
+- [PMs / POs](../guide/by-persona/pms.md)
+- [Developers](../guide/by-persona/developers.md)
 
 ---
 

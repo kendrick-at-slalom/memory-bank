@@ -5,7 +5,7 @@ last_updated: 2026-04-23
 
 # Memory Bank Hydration Guide
 
-This guide walks you through setting up and populating a memory bank so that your AI coding assistant can find and reason over your team’s decisions, rules, exceptions, and environmental facts at generation time.
+This guide walks you through setting up and populating a memory bank so that your AI coding assistant can find and reason over your team's decisions, rules, exceptions, and environmental facts at generation time.
 
 The model itself (record types, field definitions, relationships) lives in [`model/`](../model/). This guide covers the practical side: what to do first, how to write records in your role, and how to verify that Copilot can actually find them.
 
@@ -17,11 +17,11 @@ Role-specific sections cover architects, product managers, and developers. The f
 
 ## Where to Start
 
-If you’re new to this:
+If you're new to this:
 
 1. **This page** — what a memory bank is, the model at a glance, and how to write your first record
 2. **[Retrieval](retrieval.md)** — how Copilot finds records, the retrieval funnel, and how to verify your records are findable
-3. **Your role’s hydration guide** — when to write records, how to fill the fields in your voice, and worked examples:
+3. **Your role's hydration guide** — when to write records, how to fill the fields in your voice, and worked examples:
    - [Architects](by-persona/architects.md)
    - [Product managers / product owners](by-persona/pms.md)
    - [Developers](by-persona/developers.md)
@@ -32,11 +32,11 @@ If you want the full schema details, see [`model/README.md`](../model/README.md)
 
 ## What Is a Memory Bank?
 
-A memory bank is a governed knowledge layer that your AI coding assistant consults at generation time. It’s a collection of Markdown files with YAML frontmatter, organized so that agents can find the right records cheaply without reading everything.
+A memory bank is a governed knowledge layer that your AI coding assistant consults at generation time. It's a collection of Markdown files with YAML frontmatter, organized so that agents can find the right records cheaply without reading everything.
 
 What it is not:
 
-- Not an agent-memory infrastructure product (Mem0, Zep, etc.). There’s no database, no embedding store, no running service.
+- Not an agent-memory infrastructure product (Mem0, Zep, etc.). There's no database, no embedding store, no running service.
 - Not a wiki. Records have structured frontmatter that agents filter on; wikis are prose that agents have to read in full.
 - Not a documentation repo. Docs describe how things work. Memory bank records capture why things are the way they are, what rules apply, and where exceptions exist.
 
@@ -63,23 +63,23 @@ The most important field is `applies_to`. If you fill nothing else beyond the re
 
 A `.github/copilot-instructions.md` file[^copilot-instructions] in your repo tells Copilot how to work with your memory bank. IDE Copilot, Copilot CLI, and the Copilot coding agent all read it automatically. You configure once; all surfaces pick it up.
 
-A starter template is available at [`copilot-instructions.md`](../copilot-instructions.md) in the repo root. Copy it into your memory bank repo’s `.github/` directory and adjust the values for your team.
+A starter template is available at [`copilot-instructions.md`](../copilot-instructions.md) in the repo root. Copy it into your memory bank repo's `.github/` directory and adjust the values for your team.
 
 If you use Copilot Spaces[^copilot-spaces], the Space scoping works alongside `copilot-instructions.md` — the instructions tell Copilot _how_ to use the memory bank, the Space tells it _which repos to look in_.
 
 ## Writing Your First Record
 
-Start with a Context record. It’s the simplest type: a fact about your environment that other roles need at generation time.
+Start with a Context record. It's the simplest type: a fact about your environment that other roles need at generation time.
 
 1. Create a file in the appropriate directory (e.g., `context/platform-CTX-0001.md`)
 2. Fill the frontmatter. At minimum: `id`, `title`, `memory_type: Context`, `status: active`, `applies_to`, and the Context-specific `fact_statement` field.
-3. Write a brief body explaining the fact in prose. The body supports the frontmatter; it doesn’t replace it.
+3. Write a brief body explaining the fact in prose. The body supports the frontmatter; it doesn't replace it.
 4. Commit and push.
 5. Verify Copilot can find it — see [Retrieval: verifying a record is findable](retrieval.md#verifying-a-record-is-findable).
 
 For a complete worked example of a Context record, see [`examples/context/`](../examples/context/).
 
-Once you’ve written your first record, read the [retrieval guide](retrieval.md) to understand how Copilot finds records and how to verify yours are working. Then jump to your role’s hydration guide for triggers and worked examples.
+Once you've written your first record, read the [retrieval guide](retrieval.md) to understand how Copilot finds records and how to verify yours are working. Then jump to your role's hydration guide for triggers and worked examples.
 
 [^copilot-instructions]: `.github/copilot-instructions.md` is GitHub Copilot's repository-scoped custom instructions file. Instructions in the file are automatically added to Copilot requests whenever the repo is in scope — across the IDE extensions, the coding agent on github.com, and the Copilot CLI. See [GitHub Docs: Adding repository custom instructions for GitHub Copilot](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions); [GitHub Docs: Adding custom instructions for GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-custom-instructions).
 

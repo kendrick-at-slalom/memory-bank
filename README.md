@@ -23,12 +23,11 @@ The model is deliberately lean; required fields are the smallest set that makes 
 │   ├── 03-policy-rule.md
 │   ├── 04-exception.md
 │   ├── 05-context.md
-│   ├── 06-relationships.md
-│   └── by-persona/    # full authorship guides per role
+│   └── 06-relationships.md
 └── guide/             # practitioner-facing hydration guide
     ├── README.md      # what a memory bank is, how to get started
     ├── retrieval.md   # how Copilot finds records, the retrieval funnel
-    └── by-persona/    # role-specific hydration (architects, PMs, developers)
+    └── by-persona/    # role-specific hydration guides (architects, PMs, developers): triggers, cheat sheets, worked examples
 ```
 
 ## Getting Started
