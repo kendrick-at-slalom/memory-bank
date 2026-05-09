@@ -43,6 +43,18 @@ The methodology for moving from these sources into proposed records is in [`ai-a
 
 A note on volume: a busy codebase generates more candidate records than the bank should hold. Resist the urge to capture everything. The bar from the intro to this page applies: would a future teammate (or an agent working on your service) benefit from knowing this without reading the code? If yes, write it. If they could just read the code, don't.
 
+### Promoting from your working memory
+
+If you've been running working memory in this project for weeks or months, that's also a hydration source. Your `working-memory/decisionLog.md` entries and `working-memory/conventions.md` patterns are candidates for memory-bank records when their reach broadens beyond this one project.
+
+| Source                                                          | Most often produces                                                                                                              |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `working-memory/decisionLog.md` (after the log has accumulated) | Decision when a logged choice applies beyond this project; sometimes Context when the entry captured a vendor behavior or gotcha |
+| `working-memory/conventions.md`                                 | PolicyRule when a convention recurs across projects                                                                              |
+| `working-memory/dataContracts.md`                               | Context when a contract becomes a cross-project fact                                                                             |
+
+The promotion signal is **recurrence**, not first-mention. A pattern you've established only in this project stays in working memory; one you've re-established on more than one project earns memory-bank candidacy. See [The Bridge from Working Memory](../ai-assisted-hydration.md#the-bridge-from-working-memory) for the full pattern.
+
 ## Field-Fill Cheat Sheet
 
 The schema defines each field; this table shows how you as a developer naturally phrase them.

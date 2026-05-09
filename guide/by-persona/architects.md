@@ -45,6 +45,12 @@ The methodology for moving from these sources into proposed records is in [`ai-a
 
 A note on signal: ADRs convert to Decisions almost mechanically; the format is already aligned. Whiteboard photos and meeting transcripts have lower signal-per-record and need more human review at the propose step. Start with the high-signal sources first; once those are captured, decide whether the lower-signal sources are worth the cleanup pass.
 
+### Promoting from working memory
+
+If you run working memory in any code repo (architecture-as-code repos, prototype spikes, design experiments), the entries you accumulate there are candidates for memory-bank records when their reach broadens. The promotion signal is recurrence and reach: a working-memory `decisionLog.md` entry or `conventions.md` pattern that applies beyond the originating project is a memory-bank candidate. See [The Bridge from Working Memory](../ai-assisted-hydration.md#the-bridge-from-working-memory) for the full pattern.
+
+For architects who don't run code-side working memory, this isn't a primary hydration path; the external sources above are.
+
 ## Field-Fill Cheat Sheet
 
 The schema defines each field; this table shows how you as an architect naturally phrase them.
