@@ -24,6 +24,25 @@ The common thread: Decisions are implementation choices with follow-on reach. Co
 
 The bar for writing a record: would a future teammate (or an agent working on your service) benefit from knowing this without reading the code? If yes, write it. Records that just restate what the code already says are noise.
 
+## Where to Start Hydrating
+
+If you're hydrating an existing codebase (the realistic case for most teams), most of what belongs in the memory bank is implicit in the code, the git history, or the runbooks. Developer-relevant sources, in rough order of payoff per record:
+
+| Source                                        | Most often produces                                                                             |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| PR descriptions for non-trivial merges        | Decision (implementation choice with reach), occasional Exception when the PR is the workaround |
+| Conventional-commit prefixes in `git log`     | Decision (`refactor:` and `feat:` with reach), Context (`fix:` for recurring gotchas)           |
+| Code comments tagged `TODO` / `NOTE` / `HACK` | Context (gotchas), Exception (workarounds with stated reasons)                                  |
+| README files and `/docs` directories          | Context (project facts), occasionally PolicyRule                                                |
+| Lint configs, pre-commit hooks, CI configs    | PolicyRule (the rules already enforced; just need writing up)                                   |
+| Type definitions and API contracts            | Context (canonical data shapes)                                                                 |
+| Runbooks and on-call docs                     | Context (operational facts, performance characteristics, vendor quirks)                         |
+| Incident postmortems and root-cause analyses  | Context (gotchas) for the failure mode; occasionally PolicyRule when the fix becomes a standard |
+
+The methodology for moving from these sources into proposed records is in [`ai-assisted-hydration.md`](../ai-assisted-hydration.md). The per-source patterns here are the input to that pipeline's `discover` phase.
+
+A note on volume: a busy codebase generates more candidate records than the bank should hold. Resist the urge to capture everything. The bar from the intro to this page applies: would a future teammate (or an agent working on your service) benefit from knowing this without reading the code? If yes, write it. If they could just read the code, don't.
+
 ## Field-Fill Cheat Sheet
 
 The schema defines each field; this table shows how you as a developer naturally phrase them.

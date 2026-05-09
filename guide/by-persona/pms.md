@@ -24,6 +24,25 @@ The common thread: if you made a call that shapes what gets built, it's a Decisi
 
 A special note on **commitments**: if you've promised something to a customer or stakeholder, that lives in the memory bank as a Context today (with a `commitment` tag). The schema's open questions track whether Commitment becomes its own type; for now, fold commitment content into Context and tag it so it's retrievable.
 
+## Where to Start Hydrating
+
+If you're hydrating an existing product context (the realistic case for most teams), most of what should land in the memory bank is already captured somewhere in your work. PM-relevant sources, in rough order of payoff per record:
+
+| Source                                           | Most often produces                                                                        |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| PRDs and scope docs                              | Context (customer commitments, scope boundaries), Decision (prioritization, sequencing)    |
+| Customer interview notes and discovery summaries | Context (segment facts, market truths)                                                     |
+| Roadmaps and quarter plans                       | Decision (prioritization, scope), Context (commitments to stakeholders)                    |
+| Sales-engineering sync notes                     | Context (commitments made under sales pressure that engineering needs to honor)            |
+| Customer support themes and ticket clusters      | Context (segment behavior facts, recurring friction)                                       |
+| Pricing pages and tier definitions               | Context (the "what's in each tier" facts), PolicyRule (standing rules that govern tiering) |
+| Strategic plans and OKRs                         | PolicyRule (product principles), Decision (what we picked over alternatives)               |
+| Stakeholder commitment threads (email, Slack)    | Context with `commitment` tag (the most invisible and most valuable to capture)            |
+
+The methodology for moving from these sources into proposed records is in [`ai-assisted-hydration.md`](../ai-assisted-hydration.md). The per-source patterns here are the input to that pipeline's `discover` phase.
+
+A note on commitments: customer commitments often live only in someone's email or a Slack thread. They are the most invisible knowledge in product orgs and the highest payoff to capture. If you do nothing else with the memory bank, capture customer commitments as Context records with the `commitment` tag.
+
 ## Field-Fill Cheat Sheet
 
 The schema defines each field; this table shows how you as a PM naturally phrase them.

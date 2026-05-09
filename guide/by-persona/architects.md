@@ -26,6 +26,25 @@ The common thread:
 - If you're **describing the rules** that govern code being generated inside your scope, you're writing **PolicyRules**.
 - If you're recording a **carve-out** from one of those rules, you're writing an **Exception**.
 
+## Where to Start Hydrating
+
+If you're hydrating an existing project (the realistic case for most teams), the source material you need is already around you. Architect-relevant sources, in rough order of payoff per record:
+
+| Source                                                | Most often produces                                                                                     |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Existing ADRs (folder or wiki)                        | Decision (highest signal; the format already matches)                                                   |
+| Standards documents and architecture guidelines       | PolicyRule                                                                                              |
+| Architecture review notes and decision logs           | Decision; occasionally Context for system facts surfaced mid-discussion                                 |
+| System diagrams (with annotations explaining choices) | Context for system facts; sometimes Decision if the diagram embeds a choice                             |
+| Compliance or audit findings                          | PolicyRule (when a finding becomes a standing rule), Exception (when a documented deviation is granted) |
+| Incident postmortems                                  | Context for gotchas and recurring failure modes; occasionally PolicyRule when a new standard emerges    |
+| Whiteboard photos and design sketches                 | Decision drafts; verify before promoting since these are mid-process artifacts                          |
+| Wikis / Confluence pages                              | Mixed; Context most often, with the caveat that wiki content is frequently stale                        |
+
+The methodology for moving from these sources into proposed records is in [`ai-assisted-hydration.md`](../ai-assisted-hydration.md). The per-source patterns here are the input to that pipeline's `discover` phase.
+
+A note on signal: ADRs convert to Decisions almost mechanically; the format is already aligned. Whiteboard photos and meeting transcripts have lower signal-per-record and need more human review at the propose step. Start with the high-signal sources first; once those are captured, decide whether the lower-signal sources are worth the cleanup pass.
+
 ## Field-Fill Cheat Sheet
 
 The schema defines each field; this table shows how you as an architect naturally phrase them.
