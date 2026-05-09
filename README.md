@@ -29,8 +29,12 @@ The model is deliberately lean; required fields are the smallest set that makes 
 │   ├── README.md              # what a memory bank is, how to get started
 │   ├── retrieval.md           # how Copilot finds records, the retrieval funnel
 │   ├── leading-practices.md   # cross-cutting discipline: frontmatter, lifecycle, verification
+│   ├── ai-assisted-hydration.md  # six-phase pipeline for AI-assisted authorship
 │   └── by-persona/            # role-specific hydration guides (architects, PMs, developers)
+├── skills/                    # reference Copilot skill files for the AI-assisted hydration phases
+│   └── hydrate-{discover,extract,draft,reconcile,propose,verify}/
 └── examples/                  # sample records across all four types
+    └── hydration-demo/        # synthesized source corpus for demoing AI-assisted hydration
 ```
 
 ## Getting Started
@@ -38,6 +42,8 @@ The model is deliberately lean; required fields are the smallest set that makes 
 Run the scaffold prompt in [SCAFFOLD.md](SCAFFOLD.md) with an AI coding assistant (Claude Code, Copilot, Cursor, etc.) to interactively set up a memory bank for your project. The prompt will ask a few questions about your context and then generate the directory structure, templates, and agent instructions.
 
 For the practitioner-facing hydration guide (what to do first, how to write records in your role, how to verify Copilot can find them), see [guide/README.md](guide/README.md).
+
+For AI-assisted hydration (mining ADRs, transcripts, PRs, and other artifacts to surface candidate records), see [guide/ai-assisted-hydration.md](guide/ai-assisted-hydration.md). Reference skill files for each phase live in [skills/](skills/).
 
 For the full architecture (types, retrieval model, relationships, and worked examples) see [model/README.md](model/README.md).
 

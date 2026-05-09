@@ -190,6 +190,26 @@ Options:
 
 ---
 
+### Question 9: AI-assisted hydration skills
+
+(Clickable.) "Do you want to install the AI-assisted hydration skill files? These ship at `skills/hydrate-*/` in this reference repo and let an agent surface candidate records from existing artifacts (ADRs, transcripts, PRs, commit history) for human review.
+
+Recommended if you have existing source material to mine. Skills are opt-in; you can install them later by re-running this prompt or copying the files manually."
+
+Options:
+
+1. **Yes, install all six skills** into `.github/skills/`.
+2. **Skip for now.** Skills stay in this reference repo for later opt-in.
+
+Based on answer:
+
+- Yes → after the main scaffold operations complete, run Step 6 below.
+- No → skip Step 6 entirely.
+
+The hydration methodology (six-phase pipeline: discover → extract → draft → reconcile → propose → verify) is documented in `guide/ai-assisted-hydration.md`. Even teams that skip the skill install can read that page; the skills are convenience wrappers around the methodology, not the methodology itself.
+
+---
+
 ### Now scaffold the memory bank.
 
 Using the answers above, create the following.
@@ -451,6 +471,23 @@ Options:
 
 If option 1, walk through 1–2 records using the templates, filling in real content from the user's answers. If the user's role matches a persona hydration guide in `guide/by-persona/`, read that guide first and use its field-fill cheat sheet and worked examples to shape phrasing. Templates give the structure; the persona guide gives the voice.
 
+#### 6. Install hydration skills (if Q9 = yes)
+
+Skip this step entirely if Q9 = no.
+
+Copy each `skills/hydrate-*/SKILL.md` from this reference repo into `.github/skills/hydrate-*/SKILL.md` in the target code repo, preserving directory structure. The six skills are:
+
+- `hydrate-discover`: inventory available source artifacts
+- `hydrate-extract`: pull candidate findings from a source
+- `hydrate-draft`: shape findings into full record drafts
+- `hydrate-reconcile`: annotate drafts against the existing bank
+- `hydrate-propose`: open a PR for human review
+- `hydrate-verify`: round-trip test that Copilot can find a newly accepted record
+
+If `.github/skills/hydrate-*/` already exists in the target repo, prompt before overwriting (same overwrite/skip pattern used in steps 1–3).
+
+After install, point the user at `guide/ai-assisted-hydration.md` for the methodology and remind them the skills are invokable as `/hydrate-discover`, `/hydrate-extract`, etc. once Copilot picks them up (typically next session start in the target repo).
+
 ---
 
 ### After scaffolding, summarize what was created
@@ -459,5 +496,6 @@ If option 1, walk through 1–2 records using the templates, filling in real con
 - Remind the user of the four-stage retrieval funnel.
 - Point them at `model/` docs for deeper reference and `guide/` for hydration practice.
 - Remind them of the scope they chose (Q1) and the governance implications; if scope is broad, suggest a brief conversation with contributors about how records get proposed and accepted across teams.
+- If hydration skills were installed (Q9 = yes), confirm the six skills are present in `.github/skills/hydrate-*/` and point the user at `guide/ai-assisted-hydration.md` for the methodology.
 - Suggest the next step: "Write your first real record. Start with a Decision; they're the most familiar and immediately valuable."
 ````

@@ -26,6 +26,7 @@ If you're new to this:
    - [Product managers / product owners](by-persona/pms.md)
    - [Developers](by-persona/developers.md)
 4. **[Leading Practices](leading-practices.md)** for cross-cutting discipline: frontmatter habits, lifecycle, cross-role work, anti-patterns, verification.
+5. **[AI-Assisted Hydration](ai-assisted-hydration.md)** when you have existing artifacts (ADRs, transcripts, PRs) and want AI to surface candidate records for review.
 
 If you want the full schema details, see [`model/README.md`](../model/README.md).
 

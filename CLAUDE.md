@@ -2,7 +2,7 @@
 
 > **What this repo is:** A reference architecture for structured knowledge layers that AI coding assistants can query at generation time. It defines four record types, a shared base schema, a retrieval model, and a relationship vocabulary.
 >
-> **What this repo is NOT:** A template library, a pre-populated knowledge base, or a notes/capture pipeline. How records get _into_ the memory bank (meeting notes, grooming workflows, promotion processes) is an implementation concern for the adopting team, not part of this architecture.
+> **What this repo is NOT:** A template library or a pre-populated knowledge base. The `model/` tree is the architecture; `guide/` teaches hydration practice (including AI-assisted patterns in `guide/ai-assisted-hydration.md`); `skills/` ships reference skill files for the hydration pipeline. Specific tool integrations (MCP servers, CI hooks, custom pipelines) remain implementation concerns for the adopting team.
 
 ## Repo Layout
 
@@ -25,11 +25,15 @@
 │   ├── README.md                # what a memory bank is, how to write your first record
 │   ├── retrieval.md             # how agents find records; role-specific query patterns
 │   ├── leading-practices.md     # cross-cutting discipline: frontmatter, lifecycle, verification
+│   ├── ai-assisted-hydration.md # six-phase pipeline for AI-assisted authorship
 │   └── by-persona/              # role-specific hydration (triggers, cheat sheets, worked examples)
 │       ├── architects.md
 │       ├── pms.md
 │       └── developers.md
+├── skills/                      # reference Copilot skill files for the AI-assisted hydration phases
+│   └── hydrate-{discover,extract,draft,reconcile,propose,verify}/
 └── examples/                    # sample records across all four types
+    └── hydration-demo/          # synthesized source corpus for demoing AI-assisted hydration
 ```
 
 **Reading order matters.** `00-retrieval-model.md` first: it explains the design forces that shaped everything else. Then `01-base-memory-record.md` for the shared schema. Type-specific files and relationships after that.
