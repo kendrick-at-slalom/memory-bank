@@ -12,7 +12,7 @@ Input: drafts from `hydrate-draft`.
 
 When this skill is activated:
 
-1. For each draft, query the existing bank using the four-stage retrieval funnel (see `memory-bank/guide/retrieval.md`):
+1. For each draft, query the existing bank using the four-stage retrieval funnel (see `{BANK_PATH}/guide/retrieval.md`):
    - Glob the type's directory (e.g., `decisions/*.md`) for similar `id` patterns
    - Grep frontmatter for matching `applies_to` values
    - Read frontmatter on the surviving candidates

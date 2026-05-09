@@ -27,7 +27,7 @@ In order of likelihood:
 - **`applies_to` vocabulary mismatch.** The record uses different scope terms than the question. Adjust the record's `applies_to` or rephrase the question.
 - **`status` filter.** Some agent configurations filter `proposed` records out of retrieval. Confirm `status: accepted`.
 - **Wrong directory or wrong Space scope.** The record landed somewhere the agent isn't looking.
-- **Frontmatter is too thin.** Minimal frontmatter makes records invisible to the scope pass; see `memory-bank/guide/leading-practices.md#frontmatter-discipline`.
+- **Frontmatter is too thin.** Minimal frontmatter makes records invisible to the scope pass; see `{BANK_PATH}/guide/leading-practices.md#frontmatter-discipline`.
 
 ## Output
 

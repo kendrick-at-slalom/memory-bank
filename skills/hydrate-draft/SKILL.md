@@ -19,7 +19,7 @@ When this skill is activated:
    - **PolicyRule** = standing guidance for many future choices
    - **Exception** = a sanctioned deviation from a PolicyRule
    - **Context** = an environmental fact other records depend on
-2. Fill the base frontmatter from `memory-bank/model/01-base-memory-record.md`:
+2. Fill the base frontmatter from `{BANK_PATH}/model/01-base-memory-record.md`:
    - Generate a UUID v4
    - Set `status: proposed` (always; promotion to `accepted` is a human call)
    - Compose `id` using the team's namespace and type prefix (ADR, POL, EXC, CTX)

@@ -486,6 +486,16 @@ Copy each `skills/hydrate-*/SKILL.md` from this reference repo into `.github/ski
 
 If `.github/skills/hydrate-*/` already exists in the target repo, prompt before overwriting (same overwrite/skip pattern used in steps 1–3).
 
+**Token replacement during copy.** Three SKILL files (`hydrate-draft`, `hydrate-reconcile`, `hydrate-verify`) contain `{BANK_PATH}` tokens at memory-bank path references. Replace each occurrence with the bank's path relative to the consumer's code repo root, using Q3 (memory bank location) + Q4 (directory name):
+
+- Q3 = 1 (colocated): replace with the Q4 directory name (default `memory-bank`).
+- Q3 = 2 (separate repo, cloned locally): replace with the relative path the consumer cloned to (typically `../<bank-repo-name>`).
+- Q3 = 3 (separate repo via `gh`): leave the token in place and note in the install summary that the consumer needs to resolve paths via `gh` at runtime; the skills won't filesystem-resolve.
+- Q3 = 4 (symlinked): replace with the symlink path at the consumer's repo root (usually the Q4 directory name).
+- Q3 = 5 (custom): replace with whatever path the consumer specified.
+
+After replacement, no `{BANK_PATH}` tokens should remain in the deployed SKILL files (except in the Q3 = 3 case, where the token deliberately stays for the consumer to resolve).
+
 After install, point the user at `guide/ai-assisted-hydration.md` for the methodology and remind them the skills are invokable as `/hydrate-discover`, `/hydrate-extract`, etc. once Copilot picks them up (typically next session start in the target repo).
 
 ---
