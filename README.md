@@ -1,12 +1,22 @@
 # Memory Bank
 
-A structured knowledge layer for AI-assisted development. Four record types, a shared base schema, a retrieval model, and a small relationship vocabulary, designed so that AI coding assistants can find and reason over organizational knowledge.
+A structured knowledge layer for AI-assisted development. Four record types, a shared base schema, a retrieval model, and a relationship vocabulary, all queryable by AI coding assistants at generation time.
 
 ## What This Is
 
-A memory bank is a collection of **Markdown files with YAML frontmatter** that captures the decisions, rules, exceptions, and environmental facts that shape how a team builds software. The structure exists to support AI retrieval: agents filter on frontmatter fields during a cheap scope pass, then read only the bodies of records that survive the filter.
+A memory bank is a collection of **Markdown files with YAML frontmatter**. The frontmatter captures the decisions, rules, exceptions, and environmental facts that shape how a team builds software. Agents filter on those frontmatter fields during a cheap scope pass, then read only the bodies of records that survive the filter.
 
 The model is deliberately lean; required fields are the smallest set that makes a record useful. **Adoption matters more than completeness.**
+
+## Getting Started
+
+Run the scaffold prompt with an AI coding assistant. If you use Copilot or Claude Code, type `/scaffold-memory-bank` directly in chat. For any other tool, copy-paste from [SCAFFOLD.md](SCAFFOLD.md). The prompt asks a few questions about your context, then generates the bank structure (directories plus record templates) and an agent instructions file at the location your tool expects.
+
+For the practitioner-facing hydration guide (what to do first, how to write records in your role, how to verify your agent can find them), see [guide/README.md](guide/README.md).
+
+For AI-assisted hydration (mining ADRs, transcripts, PRs, and other artifacts to surface candidate records), see [guide/ai-assisted-hydration.md](guide/ai-assisted-hydration.md). Reference skill files for each phase live in [.claude/skills/](.claude/skills/).
+
+For the full architecture (types, retrieval model, relationships, and worked examples) see [model/README.md](model/README.md).
 
 ## Repo Layout
 
@@ -46,17 +56,7 @@ The model is deliberately lean; required fields are the smallest set that makes 
     └── hydration-demo/        # synthesized source corpus for demoing AI-assisted hydration
 ```
 
-See the "Agent surface" section in [`CLAUDE.md`](CLAUDE.md) for how the `.claude/` and `.github/` trees support Copilot and Claude Code with equivalent behavior — single canonical files where both tools natively read the same location, paired files where formats differ.
-
-## Getting Started
-
-Run the scaffold prompt with an AI coding assistant. If you use Copilot or Claude Code, type `/scaffold-memory-bank` directly in chat. For any other tool, copy-paste from [SCAFFOLD.md](SCAFFOLD.md). The prompt asks a few questions about your context and generates the directory structure, templates, and agent instructions.
-
-For the practitioner-facing hydration guide (what to do first, how to write records in your role, how to verify your agent can find them), see [guide/README.md](guide/README.md).
-
-For AI-assisted hydration (mining ADRs, transcripts, PRs, and other artifacts to surface candidate records), see [guide/ai-assisted-hydration.md](guide/ai-assisted-hydration.md). Reference skill files for each phase live in [.claude/skills/](.claude/skills/).
-
-For the full architecture (types, retrieval model, relationships, and worked examples) see [model/README.md](model/README.md).
+See the "Agent surface" section in [`CLAUDE.md`](CLAUDE.md) for how the `.claude/` and `.github/` trees support Copilot and Claude Code with equivalent behavior: single canonical files where both tools natively read the same location, paired files where formats differ.
 
 ## License
 
