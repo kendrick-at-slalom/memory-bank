@@ -27,7 +27,7 @@ Retrieval happens in two passes:
 
 ### The Four-Stage Retrieval Funnel
 
-When an agent queries the memory bank, it should follow this funnel — cheapest operations first:
+When an agent queries the memory bank, it should follow this funnel, cheapest operations first:
 
 | Stage | Operation             | Cost                   | What it does                                      |
 | ----- | --------------------- | ---------------------- | ------------------------------------------------- |
@@ -74,13 +74,13 @@ Full spec: [03-policy-rule.md](03-policy-rule.md)
 
 An Exception captures a **sanctioned deviation from a PolicyRule**. Every Exception points at exactly one PolicyRule through its required `exception_to` field. If there's no rule to point at, you have a Decision or a Context, not an Exception. The other required fields are `justification` and `approved_by`.
 
-Track exceptions as first-class records. Exceptions that live in Slack threads or verbal agreements are invisible to agents and impossible to audit. An Exception record turns informal permission into something governed and time-bounded. Teams that skip this accumulate shadow rules — informal deviations that nobody can find, review, or expire.
+Track exceptions as first-class records. Exceptions that live in Slack threads or verbal agreements are invisible to agents and impossible to audit. An Exception record turns informal permission into something governed and time-bounded. Teams that skip this accumulate shadow rules: informal deviations that stay invisible to governance and can't be expired on schedule.
 
 Full spec: [04-exception.md](04-exception.md)
 
 ### Context
 
-A Context captures an environmental fact: _this is true right now_. It is descriptive rather than prescriptive. Context adds `context_scope` and `fact_statement` as required fields. Context is the loosest type and the one every role on a team produces — it's where the shared-backbone claim becomes concrete.
+A Context captures an environmental fact: _this is true right now_. It's descriptive rather than prescriptive. Context adds `context_scope` and `fact_statement` as required fields. Context is the loosest type and the one every role on a team produces, which is where the shared-backbone claim becomes concrete.
 
 Full spec: [05-context.md](05-context.md)
 
@@ -159,7 +159,7 @@ flowchart TD
 
 ### Example 4: A PM Commitment Shaping a Developer Decision
 
-A product manager authors a Context capturing a customer commitment (tagged `commitment`): enterprise accounts hold a 99.95% uptime SLA with service credits on breach. A developer on the fulfillment team later makes an implementation Decision about retry behavior for calls into a flaky upstream. The Decision inherits from the commitment Context — the retry budget is tighter than it would be in isolation because the SLA is load-bearing.
+A product manager authors a Context capturing a customer commitment (tagged `commitment`): enterprise accounts hold a 99.95% uptime SLA with service credits on breach. A developer on the fulfillment team later makes an implementation Decision about retry behavior for calls into a flaky upstream. The Decision inherits from the commitment Context: the retry budget is tighter than it would be in isolation because the SLA is load-bearing.
 
 ```mermaid
 flowchart TD
@@ -199,4 +199,4 @@ flowchart TD
     DEC_DELAY -->|constrained_by| CTX_T1_COMMIT
 ```
 
-Same model as the architecture examples, same relationships, different content. The PM who wrote the delay Decision didn't invent a new record type; the standard Decision shape held up. When the Q3 launch approaches and someone asks "why did we hold tier-2?", the Decision cites both Contexts and the answer is one query away.
+Same model and relationships as the architecture examples, just different content. The PM who wrote the delay Decision didn't invent a new record type; the standard Decision shape held up. When the Q3 launch approaches and someone asks "why did we hold tier-2?", the Decision cites both Contexts and the answer is one query away.

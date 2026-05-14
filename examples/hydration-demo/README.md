@@ -1,6 +1,6 @@
 # Hydration Demo Fixture Set
 
-Synthesized source corpus for demoing the [AI-assisted hydration pipeline](../../guide/ai-assisted-hydration.md). All content is fictional; the company, services, and people don't exist.
+Synthesized source corpus for demoing the [AI-assisted hydration pipeline](../../guide/ai-assisted-hydration.md). Everything below is fictional; no real company is behind it.
 
 ## Layout
 
