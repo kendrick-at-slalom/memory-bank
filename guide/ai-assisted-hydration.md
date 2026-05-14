@@ -39,7 +39,7 @@ Six phases, each invokable on its own or chained. The last phase verifies retrie
 | **5. propose** | Reconciled drafts | PR or staged change with `status: proposed` |
 | **6. verify** | A newly accepted record | Round-trip test: did Copilot find the record when asked the source question? |
 
-Reference skills for each phase live in [`skills/`](../skills/). Each is a single `SKILL.md` invocable as a Copilot skill. Substitute Claude Code agent definitions or your tool's equivalent when needed.
+Reference skills for each phase live in [`.claude/skills/`](../.claude/skills/). Each is a single `SKILL.md` invocable as a slash command. They are read natively by both Claude Code and VS Code Copilot[^cross-tool-skills], so no per-tool translation is required.
 
 ### 1. discover
 
@@ -125,7 +125,7 @@ For the producing side (surfacing promotion candidates from working memory), see
 
 - It does not replace the [per-persona hydration guides](by-persona/). Those cover authorship triggers in role voice, field-fill cheat sheets, and worked records. AI-assisted hydration is a complementary path, not a replacement.
 - It does not auto-merge. Every phase ends with a human-reviewable artifact; no record reaches `accepted` without human approval.
-- It does not specify the executable details of each skill. Those live in [`skills/`](../skills/), one `SKILL.md` per phase.
+- It does not specify the executable details of each skill. Those live in [`.claude/skills/`](../.claude/skills/), one `SKILL.md` per phase.
 
 ## See Also
 
@@ -133,3 +133,5 @@ For the producing side (surfacing promotion candidates from working memory), see
 - [Leading Practices](leading-practices.md) for frontmatter discipline, lifecycle, and verification
 - [Per-persona hydration guides](by-persona/) for role-specific authorship
 - [`SCAFFOLD.md`](../SCAFFOLD.md) for setting up a memory bank from scratch
+
+[^cross-tool-skills]: Agent skills use a shared `SKILL.md` open format (`name` and `description` frontmatter plus a body). VS Code Copilot reads project skills from `.github/skills/`, `.claude/skills/`, and `.agents/skills/`. Claude Code reads them from `.claude/skills/`. Hosting at `.claude/skills/` covers both tools without duplication. See [VS Code: Use Agent Skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills); [GitHub Docs: Adding agent skills for GitHub Copilot](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills).

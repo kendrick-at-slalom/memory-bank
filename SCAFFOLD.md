@@ -1,12 +1,21 @@
 # Memory Bank Scaffold Prompt
 
-> **What this is:** An executable prompt for an AI coding assistant. Copy the content below into a conversation with your agent (Claude Code, Copilot, Cursor, etc.) to interactively scaffold a memory bank.
+> **What this is:** An executable prompt for an AI coding assistant. This is the universal copy-paste form — see "How to Use This Prompt" below for the native `/scaffold-memory-bank` invocations supported by Copilot and Claude Code.
 >
 > **Prerequisites:** The agent needs access to this repo's files as reference (clone it or point the agent at it) and write access to the target project (or target memory bank repo) where the bank will live.
 
 ---
 
 ## How to Use This Prompt
+
+If you have Copilot or Claude Code installed, you can run this interactively without copying anything:
+
+- **GitHub Copilot in VS Code:** type `/scaffold-memory-bank` in the chat panel. The prompt file at [`.github/prompts/scaffold-memory-bank.prompt.md`](.github/prompts/scaffold-memory-bank.prompt.md) is auto-loaded.
+- **Claude Code:** type `/scaffold-memory-bank` in the chat. The slash command at [`.claude/commands/scaffold-memory-bank.md`](.claude/commands/scaffold-memory-bank.md) is auto-loaded.
+
+The three forms are kept in sync — when changing the prompt content, update all three files. The body inside the four-backtick fence below is the source of truth; the two tool-specific files duplicate it verbatim with appropriate frontmatter.
+
+For any other AI assistant (Cursor, etc.), use the copy-paste path:
 
 1. Clone or download this repo.
 2. Open a conversation with your AI coding assistant.
@@ -192,19 +201,20 @@ Options:
 
 ### Question 9: AI-assisted hydration skills
 
-(Clickable.) "Do you want to install the AI-assisted hydration skill files? These ship at `skills/hydrate-*/` in this reference repo and let an agent surface candidate records from existing artifacts (ADRs, transcripts, PRs, commit history) for human review.
+(Clickable.) "Do you want to install the AI-assisted hydration skill files? These ship at `.claude/skills/hydrate-*/` in this reference repo and let an agent surface candidate records from existing artifacts (ADRs, transcripts, PRs, commit history) for human review.
 
 Recommended if you have existing source material to mine. Skills are opt-in; you can install them later by re-running this prompt or copying the files manually."
 
 Options:
 
-1. **Yes, install all six skills** into `.github/skills/`.
-2. **Skip for now.** Skills stay in this reference repo for later opt-in.
+1. **Yes, install all six skills** into `.claude/skills/` (cross-tool default: both Claude Code and VS Code Copilot read this location natively).
+2. **Yes, install into `.github/skills/`** (Copilot-only consumers who prefer the Copilot-canonical path).
+3. **Skip for now.** Skills stay in this reference repo for later opt-in.
 
 Based on answer:
 
-- Yes → after the main scaffold operations complete, run Step 6 below.
-- No → skip Step 6 entirely.
+- Option 1 or 2 → after the main scaffold operations complete, run Step 6 below using the chosen install target.
+- Option 3 → skip Step 6 entirely.
 
 The hydration methodology (six-phase pipeline: discover → extract → draft → reconcile → propose → verify) is documented in `guide/ai-assisted-hydration.md`. Even teams that skip the skill install can read that page; the skills are convenience wrappers around the methodology, not the methodology itself.
 
@@ -471,20 +481,25 @@ Options:
 
 If option 1, walk through 1–2 records using the templates, filling in real content from the user's answers. If the user's role matches a persona hydration guide in `guide/by-persona/`, read that guide first and use its field-fill cheat sheet and worked examples to shape phrasing. Templates give the structure; the persona guide gives the voice.
 
-#### 6. Install hydration skills (if Q9 = yes)
+#### 6. Install hydration skills (if Q9 = option 1 or 2)
 
-Skip this step entirely if Q9 = no.
+Skip this step entirely if Q9 = option 3 (skip).
 
-Copy each `skills/hydrate-*/SKILL.md` from this reference repo into `.github/skills/hydrate-*/SKILL.md` in the target code repo, preserving directory structure. The six skills are:
+Determine the install target based on Q9:
+
+- Q9 = option 1 → install to `.claude/skills/hydrate-*/SKILL.md` (cross-tool default; both Claude Code and Copilot read this location).
+- Q9 = option 2 → install to `.github/skills/hydrate-*/SKILL.md` (Copilot-canonical path).
+
+Copy each `.claude/skills/hydrate-*/SKILL.md` from this reference repo into the chosen target path in the consumer repo, preserving directory structure. The six skills are:
 
 - `hydrate-discover`: inventory available source artifacts
 - `hydrate-extract`: pull candidate findings from a source
 - `hydrate-draft`: shape findings into full record drafts
 - `hydrate-reconcile`: annotate drafts against the existing bank
 - `hydrate-propose`: open a PR for human review
-- `hydrate-verify`: round-trip test that Copilot can find a newly accepted record
+- `hydrate-verify`: round-trip test that the agent can find a newly accepted record
 
-If `.github/skills/hydrate-*/` already exists in the target repo, prompt before overwriting (same overwrite/skip pattern used in steps 1–3).
+If the target `hydrate-*/` directories already exist in the consumer repo, prompt before overwriting (same overwrite/skip pattern used in steps 1–3).
 
 **Token replacement during copy.** Three SKILL files (`hydrate-draft`, `hydrate-reconcile`, `hydrate-verify`) contain `{BANK_PATH}` tokens at memory-bank path references. Replace each occurrence with the bank's path relative to the consumer's code repo root, using Q3 (memory bank location) + Q4 (directory name):
 
@@ -496,7 +511,7 @@ If `.github/skills/hydrate-*/` already exists in the target repo, prompt before 
 
 After replacement, no `{BANK_PATH}` tokens should remain in the deployed SKILL files (except in the Q3 = 3 case, where the token deliberately stays for the consumer to resolve).
 
-After install, point the user at `guide/ai-assisted-hydration.md` for the methodology and remind them the skills are invokable as `/hydrate-discover`, `/hydrate-extract`, etc. once Copilot picks them up (typically next session start in the target repo).
+After install, point the user at `guide/ai-assisted-hydration.md` for the methodology and remind them the skills are invokable as `/hydrate-discover`, `/hydrate-extract`, etc. once their agent picks them up (typically next session start in the target repo).
 
 ---
 
@@ -506,6 +521,6 @@ After install, point the user at `guide/ai-assisted-hydration.md` for the method
 - Remind the user of the four-stage retrieval funnel.
 - Point them at `model/` docs for deeper reference and `guide/` for hydration practice.
 - Remind them of the scope they chose (Q1) and the governance implications; if scope is broad, suggest a brief conversation with contributors about how records get proposed and accepted across teams.
-- If hydration skills were installed (Q9 = yes), confirm the six skills are present in `.github/skills/hydrate-*/` and point the user at `guide/ai-assisted-hydration.md` for the methodology.
+- If hydration skills were installed (Q9 = option 1 or 2), confirm the six skills are present at the chosen install path (`.claude/skills/hydrate-*/` or `.github/skills/hydrate-*/`) and point the user at `guide/ai-assisted-hydration.md` for the methodology.
 - Suggest the next step: "Write your first real record. Start with a Decision; they're the most familiar and immediately valuable."
 ````

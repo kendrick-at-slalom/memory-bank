@@ -1,18 +1,44 @@
-# Claude Context — Memory Bank Reference Architecture
+# Agent Context — Memory Bank Reference Architecture
 
 > **What this repo is:** A reference architecture for structured knowledge layers that AI coding assistants can query at generation time. It defines four record types, a shared base schema, a retrieval model, and a relationship vocabulary.
 >
-> **What this repo is NOT:** A template library or a pre-populated knowledge base. The `model/` tree is the architecture; `guide/` teaches hydration practice (including AI-assisted patterns in `guide/ai-assisted-hydration.md`); `skills/` ships reference skill files for the hydration pipeline. Specific tool integrations (MCP servers, CI hooks, custom pipelines) remain implementation concerns for the adopting team.
+> **What this repo is NOT:** A template library or a pre-populated knowledge base. The `model/` tree is the architecture; `guide/` teaches hydration practice (including AI-assisted patterns in `guide/ai-assisted-hydration.md`); `.claude/skills/` ships reference skill files for the hydration pipeline. Specific tool integrations (MCP servers, CI hooks, custom pipelines) remain implementation concerns for the adopting team.
+
+## Agent surface (Copilot and Claude)
+
+This repo's agent surface is designed for functional equivalence between GitHub Copilot in VS Code and Claude Code. Where both tools natively read the same file, the artifact lives at a single canonical location; where formats differ, both forms ship side-by-side.
+
+- **Root instructions** — `CLAUDE.md` (this file). Auto-detected by Claude Code; auto-detected by VS Code Copilot when the `chat.useClaudeMdFile` setting is enabled[^vs-code-claude-md]. A thin `.github/copilot-instructions.md` pointer backstops the gating setting and ensures Copilot loads instructions regardless of its default.
+- **Skills** — `.claude/skills/hydrate-*/SKILL.md`. Read by Claude Code natively; read by VS Code Copilot natively too[^copilot-reads-claude-skills].
+- **Custom agents** — `.claude/agents/`. Read by both tools natively[^copilot-reads-claude-agents].
+- **Path-scoped instructions** — subdirectory `CLAUDE.md` files (auto-loaded by Claude when working in that subtree) plus `.github/instructions/*.instructions.md` with `applyTo` globs (Copilot's native path-scoping[^copilot-path-scoped]). Different formats, equivalent content. Pairs currently exist for `model/` and `examples/`.
+- **Slash commands / prompt files** — these must be duplicated; no cross-tool reading is documented. `.claude/commands/<name>.md` for Claude; `.github/prompts/<name>.prompt.md` for Copilot. `SCAFFOLD.md` at the repo root is a third, copy-paste-anywhere form for any other tool.
+
+When adding new agent-surface artifacts, prefer a single canonical location if both tools read it natively; otherwise duplicate and add a sync note at the top of each file.
 
 ## Repo Layout
 
 ```
 ./
-├── CLAUDE.md                    # this file
+├── CLAUDE.md                    # this file (Claude-canonical; cross-tool root instructions)
 ├── README.md                    # human-facing overview (start here for orientation)
-├── SCAFFOLD.md                  # executable prompt for setting up a memory bank
-├── copilot-instructions.starter.md  # template; SCAFFOLD processes and deploys to `.github/copilot-instructions.md`
+├── SCAFFOLD.md                  # universal copy-paste version of the scaffold prompt
+├── copilot-instructions.starter.md  # template; SCAFFOLD processes and deploys to consumer repos
+├── .claude/
+│   ├── agents/hydrator.md       # hydration-pipeline coordinator (cross-tool)
+│   ├── commands/                # Claude-format slash commands
+│   │   └── scaffold-memory-bank.md
+│   └── skills/                  # reference skills for the hydration pipeline (cross-tool)
+│       └── hydrate-{discover,extract,draft,reconcile,propose,verify}/SKILL.md
+├── .github/
+│   ├── copilot-instructions.md  # thin pointer to CLAUDE.md
+│   ├── prompts/                 # Copilot-format prompt files
+│   │   └── scaffold-memory-bank.prompt.md
+│   └── instructions/            # Copilot path-scoped instructions (applyTo globs)
+│       ├── model.instructions.md
+│       └── examples.instructions.md
 ├── model/                       # the full specification
+│   ├── CLAUDE.md                # Claude path-scoped instructions for editing the spec
 │   ├── README.md                # condensed overview of the model, points into the spec files
 │   ├── 00-retrieval-model.md    # WHY the schema is shaped this way
 │   ├── 01-base-memory-record.md # shared schema all types extend
@@ -30,9 +56,8 @@
 │       ├── architects.md
 │       ├── pms.md
 │       └── developers.md
-├── skills/                      # reference Copilot skill files for the AI-assisted hydration phases
-│   └── hydrate-{discover,extract,draft,reconcile,propose,verify}/
 └── examples/                    # sample records across all four types
+    ├── CLAUDE.md                # Claude path-scoped instructions for examples discipline
     └── hydration-demo/          # synthesized source corpus for demoing AI-assisted hydration
 ```
 
@@ -99,3 +124,11 @@ An agent encountering a `superseded` record should always resolve the chain to f
 - **README.md is the human entry point.** It should stay readable as a standalone overview. Deep schema detail belongs in `model/`, deep practice detail belongs in `guide/`, not in the README.
 - **`model/` is schema; `guide/` is practice.** The `model/` tree holds the schema spec (retrieval model, base record, four types, relationships). The `guide/` tree holds practitioner-facing content: setup, authorship, verification, leading practices. When content is on the fence, default to `guide/`.
 - **Persona-specific guidance breaks out into its own file.** Content that varies by role (authorship triggers in role voice, worked examples in role voice, role-specific tips) lives in `guide/by-persona/{architects,pms,developers}.md`. Content that applies to all personas (the four types, retrieval mechanics, frontmatter discipline) stays in shared files. When a piece of content acquires per-role variations, that's the signal to split.
+
+[^vs-code-claude-md]: VS Code Copilot auto-detects `CLAUDE.md` at the workspace root and applies it as always-on custom instructions, gated by the `chat.useClaudeMdFile` setting. See [VS Code: Use custom instructions](https://code.visualstudio.com/docs/copilot/customization/custom-instructions).
+
+[^copilot-reads-claude-skills]: VS Code Copilot reads project skills from `.github/skills/`, `.claude/skills/`, and `.agents/skills/`. Skills are an open format (`SKILL.md` with `name` and `description` frontmatter) that works across both tools without modification. See [VS Code: Use Agent Skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills); [GitHub Docs: Adding agent skills for GitHub Copilot](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills).
+
+[^copilot-reads-claude-agents]: VS Code Copilot detects `.md` files in `.claude/agents/` and applies them as custom agents (Claude sub-agent format). See [VS Code: Custom agents](https://code.visualstudio.com/docs/copilot/customization/custom-agents).
+
+[^copilot-path-scoped]: Copilot's `*.instructions.md` files in `.github/instructions/` support an `applyTo` glob in frontmatter that scopes the instructions to matching paths. The Claude equivalent is a `CLAUDE.md` file inside the subdirectory; Claude Code auto-loads it when working in that subtree. See [VS Code: Use custom instructions](https://code.visualstudio.com/docs/copilot/customization/custom-instructions).
